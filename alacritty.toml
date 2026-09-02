@@ -1,0 +1,32 @@
+# Shinsekai Alacritty Colorscheme
+[colors.primary]
+background = "#090d16"
+foreground = "#f8fafc"
+
+[colors.cursor]
+text = "#090d16"
+cursor = "#38bdf8"
+
+[colors.selection]
+text = "#ffffff"
+background = "#0284c7"
+
+[colors.normal]
+black = "#0f172a"
+red = "#f43f5e"
+green = "#10b981"
+yellow = "#f59e0b"
+blue = "#38bdf8"
+magenta = "#c084fc"
+cyan = "#06b6d4"
+white = "#e2e8f0"
+
+[colors.bright]
+black = "#334155"
+red = "#fb7185"
+green = "#34d399"
+yellow = "#fbbf24"
+blue = "#60a5fa"
+magenta = "#e879f9"
+cyan = "#22d3ee"
+white = "#ffffff"
