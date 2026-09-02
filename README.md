@@ -24,9 +24,9 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconi
 | :---: | :---: |
 | <img src="backgrounds/07-suzume-door-starry-4k.jpg" width="380" alt="Suzume Door"> | <img src="backgrounds/08-weathering-with-you-8k.jpg" width="380" alt="Weathering With You"> |
 
-| 09. Lycoris Recoil — Chisato in Sunset (4K) | 10. Cyberpunk Edgerunners — Moon Skyline (5K) |
+| 09. Wuthering Waves — Rover & Chixia (4K) | 10. Cyberpunk Edgerunners — Moon Skyline (5K) |
 | :---: | :---: |
-| <img src="backgrounds/09-chisato-sunset-nature-4k.jpg" width="380" alt="Chisato Sunset"> | <img src="backgrounds/10-edgerunners-moon-4k.jpg" width="380" alt="Edgerunners Moon"> |
+| <img src="backgrounds/09-wuthering-waves-rover-chixia-4k.jpg" width="380" alt="Rover and Chixia"> | <img src="backgrounds/10-edgerunners-moon-4k.jpg" width="380" alt="Edgerunners Moon"> |
 
 | 11. Demon Slayer — Wisteria Mountain (4K) | 12. Wistoria: Wand and Sword — Will & Elfaria (4K) |
 | :---: | :---: |
