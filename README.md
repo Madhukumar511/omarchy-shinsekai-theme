@@ -2,7 +2,7 @@
 
 > **Komorebi** *(木漏れ日)* — The poetic Japanese concept for *sunlight filtering through trees*.
 
-An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconic 4K & 8K scenery-first environmental landscape wallpapers** paired with a luminous OLED-optimized color palette, dynamic glowing anime gradient borders, and smooth spring physics animations.
+An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconic 4K & 8K scenery-first environmental landscape wallpapers** paired with a luminous OLED-optimized color palette, dynamic glowing 4-color anime gradient borders, and smooth spring physics animations.
 
 ---
 
@@ -34,35 +34,39 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconi
 
 ---
 
-## Features
+## Features & Visual Enhancements
 
 - **12 Curated 4K & 8K Environmental Masterpieces:**
   - Scenery-first anime landscapes where character and nature naturally harmonize.
-- **Glowing Tri-Color Anime Gradient Borders:**
-  - Active window borders feature a 45° luminous gradient transition: *Asuna Solar Orange* ↔ *Columbina Moon Blue* ↔ *Mitsuha Ribbon Crimson*.
-- **Glassmorphism / Frosted Acrylic Effect:**
-  - Multi-pass background blur with subtle transparency so scenic anime nature glows through windows.
-- **Snappy Anime Spring Animations:**
-  - Fast, responsive bezier physics transitions (`animeEase`) for windows, workspaces, and popups.
+- **4-Color Glowing Anime Gradient Borders:**
+  - Active window borders feature a vibrant 45° glowing anime rainbow gradient:
+    - *Sakura Blossom Pink* (`#ff3388`)
+    - *Asuna Solar Orange* (`#ff6d00`)
+    - *Electric Cyber Cyan* (`#00f0ff`)
+    - *Mitsuha Sunset Violet* (`#b344ff`)
+- **Radiant Anime Shadow Glow & Glassmorphism:**
+  - Soft neon pink-violet outer drop shadow glow with multi-pass acrylic frosted window blur.
+- **Snappy Anime Spring Physics Animations:**
+  - Smooth, responsive spring bezier curve transitions (`animeSpring`) for window popins and workspace sliding.
 - **Luminous OLED-Optimized Color Palette:**
-  - Deep velvet night canvas (`#0a0d14`) with high-contrast starlight white text (`#f1f5f9`) and vibrant character accents.
+  - Deep velvet void night canvas (`#080b12`) with high-contrast starlight white text (`#f8fafc`) and neon character accents.
+- **Integrated Tool Themes:**
+  - Custom `btop.theme`, `icons.theme` (Papirus-Dark), Neovim, VSCode, and Hyprlock lockscreen assets included.
 
 ---
 
-## Color Palette
+## Color Palette Reference
 
-| Color | Hex | Description |
+| Color | Hex | Role |
 | :--- | :--- | :--- |
-| **Background** | `#0a0d14` | Deep velvet celestial canvas |
-| **Foreground** | `#f1f5f9` | Crisp starlight mist white |
-| **Accent** | `#ff6d00` | Asuna Solar Orange Flare |
-| **Cursor** | `#ffd600` | Solar gold / comet light |
-| **Selection** | `#004b87` | Columbina deep celestial blue |
-| **Green** | `#00e676` | Mitsuha Lake Itomori emerald |
-| **Blue** | `#00b0ff` | Columbina electric moon blue |
-| **Red** | `#ff2a55` | Mitsuha braided ribbon crimson |
-| **Magenta** | `#d500f9` | Celestial aurora neon purple |
-| **Cyan** | `#00e5ff` | Electric aqua stream |
+| **Background** | `#080b12` | Deep void celestial canvas |
+| **Foreground** | `#f8fafc` | Crisp starlight mist white |
+| **Accent Primary** | `#ff3388` | Sakura Blossom Neon Pink |
+| **Accent Secondary** | `#ff6d00` | Asuna Solar Flare Orange |
+| **Cyan** | `#00f0ff` | Electric Cyber Stream |
+| **Purple** | `#b344ff` | Mitsuha Sunset Violet |
+| **Green** | `#00e676` | Lake Itomori Emerald |
+| **Yellow** | `#ffd600` | Solar Comet Gold |
 
 ---
 
@@ -94,6 +98,17 @@ omarchy theme install https://github.com/Madhukumar511/omarchy-komorebi-theme.gi
 2. Open Walker / Omarchy menu (`SUPER + ALT + SPACE` or `SUPER + SPACE`)
 3. Navigate: **Install > Style > Theme**
 4. Paste URL and press **Enter**
+
+---
+
+## Optional: Enable Glowing Borders & Anime Physics
+
+To enable the 4-color glowing anime rainbow borders and spring animations, copy `hyprland.lua` into your Hyprland configuration:
+
+```bash
+cp ~/.config/omarchy/themes/komorebi/hyprland.lua ~/.config/hypr/looknfeel.lua
+hyprctl reload
+```
 
 ---
 
