@@ -13,10 +13,10 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconi
 5. **05-violet-evergarden-8k.jpg** — 8K *Violet Evergarden* walking along a sunlit water meadow
 6. **06-spirited-away-train-4k.jpg** — Official 4K *Spirited Away* (*Studio Ghibli*) Chihiro & No-Face on the sea railway train
 7. **07-suzume-door-starry-4k.jpg** — 4K *Suzume* door overlooking starry cosmic twilight
-8. **08-weathering-with-you-8k.png** — 8K *Weathering With You* Hina praying above cloud ocean & sunlight
-9. **09-howls-moving-castle-6k.png** — 6K *Howl's Moving Castle* Howl & Sophie in alpine flower valley
+8. **08-weathering-with-you-8k.jpg** — 8K *Weathering With You* Hina praying above cloud ocean & sunlight
+9. **09-howls-moving-castle-6k.jpg** — 6K *Howl's Moving Castle* Howl & Sophie in alpine flower valley
 10. **10-edgerunners-moon-4k.jpg** — 5K *Cyberpunk Edgerunners* Lucy on moon looking at Earth
-11. **11-5cm-per-second-sakura-4k.png** — 4K *5 Centimeters Per Second* cherry blossom tree & train crossing
+11. **11-5cm-per-second-sakura-4k.jpg** — 4K *5 Centimeters Per Second* cherry blossom tree & train crossing
 12. **12-your-lie-in-april-5k.jpg** — 5K *Your Lie in April* Kaori & Kousei under starry night music lake
 
 ---
