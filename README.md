@@ -2,7 +2,7 @@
 
 > **Shinsekai** *(新世界)* — The Japanese concept for *New Worlds*.
 
-An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curated 4K & 8K scenery-first environmental landscape wallpapers** from iconic anime universes, paired with a luminous OLED-optimized color palette, clean dual-tone glowing anime gradient borders, and smooth physics animations.
+An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curated 4K & 8K scenery-first environmental landscape wallpapers** from iconic anime universes, paired with a luminous OLED-optimized color palette, clean glowing Celestial Azure / Cyan anime gradient borders, and smooth physics animations.
 
 ---
 
@@ -38,9 +38,9 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curat
 
 - **12 Curated 4K & 8K Environmental Masterpieces:**
   - Scenery-first anime landscapes where character and vast world naturally harmonize.
-- **Clean Dual-Tone Anime Gradient Borders:**
+- **Celestial Azure Anime Gradient Borders:**
   - Active window borders feature an elegant 45° glowing gradient:
-    - *Sakura Rose* (`#f43f5e`) ↔ *Celestial Azure* (`#38bdf8`)
+    - *Celestial Azure* (`#38bdf8`) ↔ *Royal Indigo* (`#818cf8`) ↔ *Electric Aqua* (`#00e5ff`)
 - **Subtle Depth & Glassmorphism:**
   - Clean velvet shadow depth (`rgba(0,0,0,0.5)`) with multi-pass frosted acrylic glass blur.
 - **Silky Smooth Ease-Out Animations:**
@@ -58,12 +58,12 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curat
 | :--- | :--- | :--- |
 | **Background** | `#090d16` | Deep void night canvas |
 | **Foreground** | `#f8fafc` | Crisp starlight mist white |
-| **Accent Primary** | `#f43f5e` | Sakura Rose Pink |
-| **Accent Secondary** | `#38bdf8` | Celestial Azure Blue |
+| **Accent Primary** | `#38bdf8` | Celestial Azure Blue |
+| **Accent Secondary** | `#00e5ff` | Electric Aqua Cyan |
+| **Indigo** | `#818cf8` | Royal Anime Indigo |
 | **Green** | `#10b981` | Lake Emerald |
 | **Yellow** | `#f59e0b` | Solar Flare Gold |
-| **Purple** | `#c084fc` | Sunset Violet |
-| **Cyan** | `#06b6d4` | Electric Aqua |
+| **Red** | `#ef4444` | Crimson Flame |
 
 ---
 

@@ -1,10 +1,10 @@
 # Shinsekai Anime Starship Prompt
 add_newline = true
 command_timeout = 200
-format = "[$directory]($style) [❯](bold #f43f5e)[❯](bold #38bdf8) "
+format = "[$directory]($style) [❯](bold #38bdf8)[❯](bold #00e5ff) "
 
 [character]
-error_symbol = "[✗](bold #f43f5e)"
+error_symbol = "[✗](bold #ef4444)"
 success_symbol = "[❯](bold #38bdf8)"
 
 [directory]
@@ -12,13 +12,13 @@ truncation_length = 3
 truncation_symbol = "…/"
 style = "bold #38bdf8"
 read_only = " 󰌾"
-read_only_style = "#f43f5e"
+read_only_style = "#ef4444"
 
 [git_branch]
 format = "[$symbol$branch]($style) "
 symbol = " "
-style = "italic #f43f5e"
+style = "italic #38bdf8"
 
 [git_status]
 format = "([$all_status$ahead_behind]($style) )"
-style = "#38bdf8"
+style = "#00e5ff"
