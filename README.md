@@ -1,21 +1,29 @@
-# Asuna — Anime Aesthetic Theme for Omarchy
+# Anime — Scenery-First Aesthetic Theme for Omarchy
 
-An anime-inspired theme crafted for **Omarchy | Hyprland**, blending scenery-first environmental landscape wallpapers with a vibrant luminous color palette inspired by **Asuna Yuuki** (*Sword Art Online*), **Mitsuha Miyamizu** (*Your Name*), and **Columbina** (*Genshin Impact*).
+An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring breathtaking **4K/8K scenery-first environmental landscape wallpapers** paired with a luminous OLED-optimized color palette, dynamic glowing anime gradient borders, and smooth spring physics animations.
+
+---
+
+## 4K & 8K Scenery Wallpapers
+
+- **01-asuna-meadow-nature.png** — 4K *Asuna* (*Sword Art Online*) resting in a vast sunlit flower grassland
+- **02-mitsuha-lake-nature.png** — Official 4K *Mitsuha* (*Your Name*) Lake Itomori mountain sunset scenery
+- **03-columbina-snow-8k.jpg** — 8K *Columbina* (*Genshin Impact*) in a vast snowy winter mountain & starry sky
+- **04-frieren-field-4k.png** — 4K *Frieren* (*Beyond Journey's End*) looking across a field of blue flowers & sky
+- **05-violet-evergarden-8k.jpg** — 8K *Violet Evergarden* walking along a sunlit water meadow
+- **06-spirited-away-train-5k.png** — 5K *Spirited Away* (*Studio Ghibli*) sea railway train at sunset
+- **07-suzume-door-starry-4k.jpg** — 4K *Suzume* door overlooking starry cosmic twilight
 
 ---
 
 ## Features
 
-- **4K Scenery-First Anime Wallpapers:**
-  - `01-asuna-meadow-nature.png` — 4K Asuna resting in a vast sunlit flower grassland
-  - `02-mitsuha-lake-nature.png` — Official 4K Makoto Shinkai Lake Itomori mountain sunset scenery
-  - `03-columbina-snow-8k.jpg` — 8K Columbina in vast snowy winter mountain & starry sky
 - **Glowing Tri-Color Anime Gradient Borders:**
   - Active window borders feature a 45° luminous gradient transition: *Asuna Solar Orange* ↔ *Columbina Moon Blue* ↔ *Mitsuha Ribbon Crimson*.
 - **Glassmorphism / Frosted Acrylic Effect:**
   - Multi-pass background blur with subtle transparency so scenic anime nature glows through windows.
 - **Snappy Anime Spring Animations:**
-  - Fast, responsive bezier physics transitions for windows, workspaces, and popups.
+  - Fast, responsive bezier physics transitions (`animeEase`) for windows, workspaces, and popups.
 - **Luminous OLED-Optimized Color Palette:**
   - Deep velvet night canvas (`#0a0d14`) with high-contrast starlight white text (`#f1f5f9`) and vibrant character accents.
 
@@ -45,12 +53,12 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, blending scenery-fir
 Run the Omarchy theme installer:
 
 ```bash
-omarchy theme install https://github.com/Madhukumar511/omarchy-asuna-theme.git
+omarchy theme install https://github.com/Madhukumar511/omarchy-anime-theme.git
 ```
 
 ### Walker Menu
 
-1. Copy the repo link: `https://github.com/Madhukumar511/omarchy-asuna-theme.git`
+1. Copy the repo link: `https://github.com/Madhukumar511/omarchy-anime-theme.git`
 2. Open Walker / Omarchy menu (`SUPER + ALT + SPACE`)
 3. Navigate: **Install > Style > Theme**
 4. Paste URL and press **Enter**
@@ -59,7 +67,7 @@ omarchy theme install https://github.com/Madhukumar511/omarchy-asuna-theme.git
 
 ## Wallpaper Cycling
 
-Cycle between the included 4K/8K anime nature wallpapers anytime:
+Cycle between the included 4K/8K anime scenery wallpapers anytime:
 
 ```bash
 omarchy theme bg next
