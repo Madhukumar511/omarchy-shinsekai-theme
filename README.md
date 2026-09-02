@@ -1,28 +1,43 @@
-# Anime — Scenery-First Aesthetic Theme for Omarchy
+# Komorebi — Scenery-First Anime Aesthetic Theme for Omarchy
+
+> **Komorebi** *(木漏れ日)* — The poetic Japanese concept for *sunlight filtering through trees*.
 
 An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconic 4K & 8K scenery-first environmental landscape wallpapers** paired with a luminous OLED-optimized color palette, dynamic glowing anime gradient borders, and smooth spring physics animations.
 
 ---
 
-## 12 Curated 4K & 8K Scenery Wallpapers
+## Wallpaper Gallery Previews
 
-1. **01-asuna-meadow-nature.png** — 4K *Asuna Yuuki* (*Sword Art Online*) resting in a vast sunlit flower grassland
-2. **02-mitsuha-lake-nature.png** — Official 4K *Mitsuha Miyamizu* (*Your Name*) Lake Itomori mountain sunset scenery
-3. **03-columbina-snow-8k.jpg** — 8K *Columbina* (*Genshin Impact*) in a vast snowy winter mountain & starry sky
-4. **04-frieren-field-4k.png** — 4K *Frieren* (*Beyond Journey's End*) looking across a field of blue flowers & sky
-5. **05-violet-evergarden-8k.jpg** — 8K *Violet Evergarden* walking along a sunlit water meadow
-6. **06-spirited-away-train-4k.jpg** — Official 4K *Spirited Away* (*Studio Ghibli*) Chihiro & No-Face on the sea railway train
-7. **07-suzume-door-starry-4k.jpg** — 4K *Suzume* door overlooking starry cosmic twilight
-8. **08-weathering-with-you-8k.jpg** — 8K *Weathering With You* Hina praying above cloud ocean & sunlight
-9. **09-raiden-shogun-inazuma-4k.jpg** — Official 4K *Raiden Shogun* (*Genshin Impact*) in stormy Inazuma purple lightning landscape
-10. **10-edgerunners-moon-4k.jpg** — 5K *Cyberpunk Edgerunners* Lucy on the moon looking at Earth
-11. **11-demon-slayer-wisteria-4k.jpg** — 4K *Demon Slayer* (*Kimetsu no Yaiba*) Mount Fujikasane moonlit purple wisteria mountain
-12. **12-saber-fate-meadow-6k.jpg** — Official 6.5K *Saber Artoria* (*Fate/Zero & Fate/Stay Night*) standing on a sunlit meadow with Excalibur
+| 01. Asuna — Sunlit Meadow (4K) | 02. Mitsuha — Lake Itomori Sunset (4K) |
+| :---: | :---: |
+| <img src="backgrounds/01-asuna-meadow-nature.png" width="380" alt="Asuna Meadow"> | <img src="backgrounds/02-mitsuha-lake-nature.png" width="380" alt="Mitsuha Lake"> |
+
+| 03. Columbina — Celestial Snow (8K) | 04. Frieren — Blue Flower Field (4K) |
+| :---: | :---: |
+| <img src="backgrounds/03-columbina-snow-8k.jpg" width="380" alt="Columbina Snow"> | <img src="backgrounds/04-frieren-field-4k.png" width="380" alt="Frieren Field"> |
+
+| 05. Violet Evergarden — Water Meadow (8K) | 06. Spirited Away — Sea Railway Train (4K) |
+| :---: | :---: |
+| <img src="backgrounds/05-violet-evergarden-8k.jpg" width="380" alt="Violet Evergarden"> | <img src="backgrounds/06-spirited-away-train-4k.jpg" width="380" alt="Spirited Away Train"> |
+
+| 07. Suzume — Cosmic Starry Twilight (4K) | 08. Weathering With You — Sunshine Clouds (8K) |
+| :---: | :---: |
+| <img src="backgrounds/07-suzume-door-starry-4k.jpg" width="380" alt="Suzume Door"> | <img src="backgrounds/08-weathering-with-you-8k.jpg" width="380" alt="Weathering With You"> |
+
+| 09. Inazuma & Raiden — Sacred Sakura Festival (4K) | 10. Cyberpunk Edgerunners — Moon Skyline (5K) |
+| :---: | :---: |
+| <img src="backgrounds/09-inazuma-raiden-festival-4k.jpg" width="380" alt="Inazuma Raiden"> | <img src="backgrounds/10-edgerunners-moon-4k.jpg" width="380" alt="Edgerunners Moon"> |
+
+| 11. Demon Slayer — Wisteria Mountain (4K) | 12. The Garden of Words — Rain Pavilion (4K) |
+| :---: | :---: |
+| <img src="backgrounds/11-demon-slayer-wisteria-4k.jpg" width="380" alt="Demon Slayer Wisteria"> | <img src="backgrounds/12-garden-of-words-4k.jpg" width="380" alt="Garden of Words"> |
 
 ---
 
 ## Features
 
+- **12 Curated 4K & 8K Environmental Masterpieces:**
+  - Scenery-first anime landscapes where the character and nature naturally harmonize.
 - **Glowing Tri-Color Anime Gradient Borders:**
   - Active window borders feature a 45° luminous gradient transition: *Asuna Solar Orange* ↔ *Columbina Moon Blue* ↔ *Mitsuha Ribbon Crimson*.
 - **Glassmorphism / Frosted Acrylic Effect:**
@@ -70,12 +85,12 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconi
 Run the Omarchy theme installer:
 
 ```bash
-omarchy theme install https://github.com/Madhukumar511/omarchy-anime-theme.git
+omarchy theme install https://github.com/Madhukumar511/omarchy-komorebi-theme.git
 ```
 
 ### Walker Menu
 
-1. Copy the repo link: `https://github.com/Madhukumar511/omarchy-anime-theme.git`
+1. Copy the repo link: `https://github.com/Madhukumar511/omarchy-komorebi-theme.git`
 2. Open Walker / Omarchy menu (`SUPER + ALT + SPACE` or `SUPER + SPACE`)
 3. Navigate: **Install > Style > Theme**
 4. Paste URL and press **Enter**
