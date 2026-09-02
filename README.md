@@ -1,18 +1,23 @@
 # Anime — Scenery-First Aesthetic Theme for Omarchy
 
-An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring breathtaking **4K/8K scenery-first environmental landscape wallpapers** paired with a luminous OLED-optimized color palette, dynamic glowing anime gradient borders, and smooth spring physics animations.
+An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconic 4K/8K scenery-first environmental landscape wallpapers** paired with a luminous OLED-optimized color palette, dynamic glowing anime gradient borders, and smooth spring physics animations.
 
 ---
 
-## 4K & 8K Scenery Wallpapers
+## 12 Curated 4K & 8K Scenery Wallpapers
 
-- **01-asuna-meadow-nature.png** — 4K *Asuna* (*Sword Art Online*) resting in a vast sunlit flower grassland
-- **02-mitsuha-lake-nature.png** — Official 4K *Mitsuha* (*Your Name*) Lake Itomori mountain sunset scenery
-- **03-columbina-snow-8k.jpg** — 8K *Columbina* (*Genshin Impact*) in a vast snowy winter mountain & starry sky
-- **04-frieren-field-4k.png** — 4K *Frieren* (*Beyond Journey's End*) looking across a field of blue flowers & sky
-- **05-violet-evergarden-8k.jpg** — 8K *Violet Evergarden* walking along a sunlit water meadow
-- **06-spirited-away-train-5k.png** — 5K *Spirited Away* (*Studio Ghibli*) sea railway train at sunset
-- **07-suzume-door-starry-4k.jpg** — 4K *Suzume* door overlooking starry cosmic twilight
+1. **01-asuna-meadow-nature.png** — 4K *Asuna* (*Sword Art Online*) resting in a vast sunlit flower grassland
+2. **02-mitsuha-lake-nature.png** — Official 4K *Mitsuha* (*Your Name*) Lake Itomori mountain sunset scenery
+3. **03-columbina-snow-8k.jpg** — 8K *Columbina* (*Genshin Impact*) in a vast snowy winter mountain & starry sky
+4. **04-frieren-field-4k.png** — 4K *Frieren* (*Beyond Journey's End*) looking across a field of blue flowers & sky
+5. **05-violet-evergarden-8k.jpg** — 8K *Violet Evergarden* walking along a sunlit water meadow
+6. **06-spirited-away-train-4k.jpg** — Official 4K *Spirited Away* (*Studio Ghibli*) Chihiro & No-Face on the sea railway train
+7. **07-suzume-door-starry-4k.jpg** — 4K *Suzume* door overlooking starry cosmic twilight
+8. **08-weathering-with-you-8k.png** — 8K *Weathering With You* Hina praying above cloud ocean & sunlight
+9. **09-howls-moving-castle-6k.png** — 6K *Howl's Moving Castle* Howl & Sophie in alpine flower valley
+10. **10-edgerunners-moon-4k.jpg** — 5K *Cyberpunk Edgerunners* Lucy on moon looking at Earth
+11. **11-5cm-per-second-sakura-4k.png** — 4K *5 Centimeters Per Second* cherry blossom tree & train crossing
+12. **12-your-lie-in-april-5k.jpg** — 5K *Your Lie in April* Kaori & Kousei under starry night music lake
 
 ---
 
@@ -67,7 +72,7 @@ omarchy theme install https://github.com/Madhukumar511/omarchy-anime-theme.git
 
 ## Wallpaper Cycling
 
-Cycle between the included 4K/8K anime scenery wallpapers anytime:
+Cycle between all 12 anime scenery wallpapers anytime:
 
 ```bash
 omarchy theme bg next
