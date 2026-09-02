@@ -1,0 +1,58 @@
+/* Shinsekai (新世界) Theme for Obsidian */
+
+.theme-dark, .theme-light {
+  --background-primary: #090d16;
+  --background-primary-alt: #0f172a;
+  --background-secondary: #090d16;
+  --background-secondary-alt: #1e293b;
+  --text-normal: #f8fafc;
+  --text-selection: #38bdf8;
+  --background-modifier-border: #f43f5e;
+
+  --text-title-h1: #f43f5e;
+  --text-title-h2: #38bdf8;
+  --text-title-h3: #c084fc;
+  --text-title-h4: #10b981;
+  --text-title-h5: #f59e0b;
+  --text-title-h6: #06b6d4;
+
+  --text-link: #38bdf8;
+  --text-accent: #f43f5e;
+  --text-accent-hover: #fb7185;
+  --interactive-accent: #f43f5e;
+  --interactive-accent-hover: #fb7185;
+
+  --text-muted: #94a3b8;
+  --text-faint: #64748b;
+  --code-normal: #38bdf8;
+
+  --text-error: #f43f5e;
+  --text-error-hover: #fb7185;
+  --text-success: #10b981;
+
+  --tag-color: #38bdf8;
+  --tag-background: #1e293b;
+
+  --graph-line: #334155;
+  --graph-node: #f43f5e;
+  --graph-node-focused: #38bdf8;
+  --graph-node-tag: #c084fc;
+  --graph-node-attachment: #10b981;
+}
+
+.cm-header-1, .markdown-rendered h1 { color: var(--text-title-h1); }
+.cm-header-2, .markdown-rendered h2 { color: var(--text-title-h2); }
+.cm-header-3, .markdown-rendered h3 { color: var(--text-title-h3); }
+.cm-header-4, .markdown-rendered h4 { color: var(--text-title-h4); }
+.cm-header-5, .markdown-rendered h5 { color: var(--text-title-h5); }
+.cm-header-6, .markdown-rendered h6 { color: var(--text-title-h6); }
+
+.markdown-rendered code { color: #38bdf8; }
+.cm-s-obsidian span.cm-keyword { color: #f43f5e; }
+.cm-s-obsidian span.cm-string { color: #10b981; }
+.cm-s-obsidian span.cm-number { color: #f59e0b; }
+.cm-s-obsidian span.cm-comment { color: #64748b; }
+.cm-s-obsidian span.cm-operator { color: #38bdf8; }
+.cm-s-obsidian span.cm-def { color: #c084fc; }
+.markdown-rendered a { color: var(--text-link); }
+.markdown-rendered blockquote { border-left-color: #f43f5e; }

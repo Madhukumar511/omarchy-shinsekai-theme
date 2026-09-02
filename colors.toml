@@ -5,6 +5,10 @@ background = "#090d16"
 selection_foreground = "#ffffff"
 selection_background = "#0284c7"
 
+# Window & UI Borders (glowing 3-tone Sakura Rose -> Sunset Violet -> Celestial Azure gradient)
+hyprland_active_border = "#f43f5e #c084fc #38bdf8 45deg"
+hyprland_inactive_border = "rgba(15,23,42,0.65)"
+
 color0 = "#0f172a"
 color1 = "#f43f5e"
 color2 = "#10b981"

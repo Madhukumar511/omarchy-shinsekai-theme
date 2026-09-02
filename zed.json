@@ -1,0 +1,83 @@
+{
+  "$schema": "https://zed.dev/schema/themes/v0.1.0.json",
+  "name": "Shinsekai",
+  "author": "misternegative21",
+  "themes": [
+    {
+      "name": "Shinsekai",
+      "appearance": "dark",
+      "style": {
+        "background": "#090d16ee",
+        "editor.background": "#090d16ee",
+        "editor.foreground": "#f8fafc",
+        "text": "#f8fafc",
+        "text.muted": "#94a3b8",
+        "text.ignored": "#64748b",
+        "text.placeholder": "#64748b",
+        "ignored": "#475569",
+        "element.hover": "#1e293b",
+        "ghost_element.hover": "#f43f5e22",
+        "ghost_element.selected": "#f43f5e33",
+        "ghost_element.active": "#f43f5e44",
+        "border": "#1e293b",
+        "editor.highlighted_line.background": "#f43f5e15",
+        "editor.active_line.background": "#f43f5e15",
+        "panel.background": "#090d16fa",
+        "title_bar.background": "#090d16fa",
+        "title_bar.inactive_background": "#090d16cc",
+        "status_bar.background": "#090d16fa",
+        "drop_target.background": "#0f172acc",
+        "elevated_surface.background": "#0f172a",
+        "toolbar.background": "#090d16fa",
+        "tab_bar.background": "#090d16fa",
+        "tab.inactive_background": "#090d16fa",
+        "tab.active_background": "#1e293b",
+        "scrollbar.track.background": "transparent",
+        "scrollbar.track.border": "#1e293b",
+        "scrollbar.thumb.background": "#f43f5e66",
+        "editor.gutter.background": "#090d16fa",
+        "terminal.background": "#090d16fa",
+        "terminal.foreground": "#f8fafc",
+        "terminal.dim_foreground": "#94a3b8",
+        "terminal.bright_foreground": "#ffffff",
+        "terminal.ansi.black": "#0f172a",
+        "terminal.ansi.red": "#f43f5e",
+        "terminal.ansi.green": "#10b981",
+        "terminal.ansi.yellow": "#f59e0b",
+        "terminal.ansi.blue": "#38bdf8",
+        "terminal.ansi.magenta": "#c084fc",
+        "terminal.ansi.cyan": "#06b6d4",
+        "terminal.ansi.white": "#e2e8f0",
+        "terminal.ansi.bright_black": "#334155",
+        "terminal.ansi.bright_red": "#fb7185",
+        "terminal.ansi.bright_green": "#34d399",
+        "terminal.ansi.bright_yellow": "#fbbf24",
+        "terminal.ansi.bright_blue": "#60a5fa",
+        "terminal.ansi.bright_magenta": "#e879f9",
+        "terminal.ansi.bright_cyan": "#22d3ee",
+        "terminal.ansi.bright_white": "#ffffff",
+        "modified": "#38bdf8",
+        "syntax": {
+          "attribute": "#38bdf8",
+          "boolean": "#f59e0b",
+          "comment": "#64748b",
+          "comment.doc": "#64748b",
+          "constant": "#c084fc",
+          "function": "#38bdf8",
+          "keyword": "#f43f5e",
+          "number": "#f59e0b",
+          "operator": "#f43f5e",
+          "string": "#10b981",
+          "variable": "#f8fafc"
+        },
+        "players": [
+          {
+            "cursor": "#38bdf8",
+            "background": "#090d16",
+            "selection": "#f43f5e33"
+          }
+        ]
+      }
+    }
+  ]
+}

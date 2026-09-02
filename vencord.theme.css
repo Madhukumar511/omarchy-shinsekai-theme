@@ -1,0 +1,86 @@
+/**
+ * @name Shinsekai
+ * @description Shinsekai (新世界) Anime Theme for Discord
+ * @version 1.0.0
+ * @author misternegative21
+*/
+@import url("https://refact0r.github.io/system24/build/system24.css");
+
+body {
+    --font: "JetBrainsMono Nerd Font";
+    --code-font: "JetBrainsMono Nerd Font";
+    font-weight: 400;
+    letter-spacing: -0.02ch;
+
+    --gap: 12px;
+    --divider-thickness: 3px;
+    --border-thickness: 2px;
+    --border-hover-transition: 0.2s ease;
+    --animations: on;
+    --list-item-transition: 0.2s ease;
+
+    --top-bar-height: var(--gap);
+    --top-bar-button-position: titlebar;
+    --top-bar-title-position: off;
+    --colors: on;
+
+    --text-0: #f8fafc;
+    --text-1: #f8fafc;
+    --text-2: #f8fafcdd;
+    --text-3: #f8fafcbb;
+    --text-4: #f8fafc88;
+    --text-5: #64748b;
+
+    --bg-1: #06090f;
+    --bg-2: #0f172a;
+    --bg-3: #090d16;
+    --bg-4: #05080e;
+
+    --accent-1: #f43f5e;
+    --accent-2: #be123c;
+    --accent-3: #f43f5e;
+    --accent-4: #38bdf8;
+    --accent-5: #c084fc;
+
+    --mention: linear-gradient(to right, rgba(244,63,94,0.2) 40%, transparent);
+    --mention-hover: linear-gradient(to right, rgba(244,63,94,0.3) 40%, transparent);
+    --reply: linear-gradient(to right, rgba(56,189,248,0.2) 40%, transparent);
+    --reply-hover: linear-gradient(to right, rgba(56,189,248,0.3) 40%, transparent);
+
+    --border-light: rgba(244,63,94,0.2);
+    --border: rgba(244,63,94,0.4);
+    --border-hover: rgba(56,189,248,0.6);
+    --active: rgba(244,63,94,0.2);
+    --hover: rgba(56,189,248,0.15);
+    --selected: rgba(244,63,94,0.25);
+
+    --header-primary: #f8fafc;
+    --header-secondary: #f8fafcbb;
+    --interactive-normal: #f8fafc;
+    --interactive-hover: #f43f5e;
+    --interactive-active: #38bdf8;
+    --interactive-muted: #64748b;
+
+    --background-primary: #090d16;
+    --background-secondary: #0f172a;
+    --background-secondary-alt: #1e293b;
+    --background-tertiary: #06090f;
+    --background-accent: rgba(244,63,94,0.2);
+    --background-message-hover: rgba(244,63,94,0.06);
+
+    --brand-experiment: #f43f5e;
+    --brand-experiment-100: rgba(244,63,94,0.1);
+    --brand-experiment-200: rgba(244,63,94,0.2);
+    --brand-experiment-300: rgba(244,63,94,0.3);
+    --brand-experiment-400: rgba(244,63,94,0.4);
+    --brand-experiment-500: #f43f5e;
+    --brand-experiment-600: #e11d48;
+
+    --status-positive-text: #10b981;
+    --status-warning-text: #f59e0b;
+    --status-danger-text: #f43f5e;
+
+    --scrollbar-thin-thumb: rgba(244,63,94,0.3);
+    --scrollbar-auto-thumb: rgba(244,63,94,0.4);
+    --scrollbar-auto-track: transparent;
+}

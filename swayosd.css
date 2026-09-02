@@ -1,0 +1,18 @@
+/* Shinsekai (新世界) SwayOSD Theme */
+@define-color background-color #090d16;
+@define-color border-color #f43f5e;
+@define-color label #f8fafc;
+@define-color image #38bdf8;
+@define-color progress #f43f5e;
+
+window {
+  border-radius: 14px;
+  border: 2px solid @border-color;
+  background-color: alpha(@background-color, 0.92);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  padding: 10px;
+}
+label  { color: @label; }
+image  { color: @image; }
+progressbar { border-radius: 12px; }
+progress { background-color: @progress; border-radius: 12px; }
