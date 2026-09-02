@@ -28,9 +28,9 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconi
 | :---: | :---: |
 | <img src="backgrounds/09-wuthering-waves-chisa-4k.jpg" width="380" alt="Chisa Crimson Reach"> | <img src="backgrounds/10-edgerunners-moon-4k.jpg" width="380" alt="Edgerunners Moon"> |
 
-| 11. Demon Slayer — Wisteria Mountain (4K) | 12. Fate/Stay Night — Saber in Avalon (5K) |
+| 11. Demon Slayer — Wisteria Mountain (4K) | 12. Anime Scenery — Twilight Horizon (4K) |
 | :---: | :---: |
-| <img src="backgrounds/11-demon-slayer-wisteria-4k.jpg" width="380" alt="Demon Slayer Wisteria"> | <img src="backgrounds/12-saber-avalon-meadow-5k.jpg" width="380" alt="Saber in Avalon"> |
+| <img src="backgrounds/11-demon-slayer-wisteria-4k.jpg" width="380" alt="Demon Slayer Wisteria"> | <img src="backgrounds/12-anime-sunset-horizon-4k.jpg" width="380" alt="Twilight Horizon"> |
 
 ---
 
