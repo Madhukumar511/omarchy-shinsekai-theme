@@ -24,20 +24,20 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconi
 | :---: | :---: |
 | <img src="backgrounds/07-suzume-door-starry-4k.jpg" width="380" alt="Suzume Door"> | <img src="backgrounds/08-weathering-with-you-8k.jpg" width="380" alt="Weathering With You"> |
 
-| 09. Castle in the Sky — Floating Laputa (4K) | 10. Cyberpunk Edgerunners — Moon Skyline (5K) |
+| 09. Mountain Waterfall Nature (8K) | 10. Cyberpunk Edgerunners — Moon Skyline (5K) |
 | :---: | :---: |
-| <img src="backgrounds/09-castle-in-the-sky-laputa-4k.jpg" width="380" alt="Castle in the Sky Laputa"> | <img src="backgrounds/10-edgerunners-moon-4k.jpg" width="380" alt="Edgerunners Moon"> |
+| <img src="backgrounds/09-mountain-waterfall-nature-8k.jpg" width="380" alt="Mountain Waterfall Nature"> | <img src="backgrounds/10-edgerunners-moon-4k.jpg" width="380" alt="Edgerunners Moon"> |
 
-| 11. Demon Slayer — Wisteria Mountain (4K) | 12. Your Name — Twin Comet Twilight (4K) |
+| 11. Demon Slayer — Wisteria Mountain (4K) | 12. Celestial Stargazing (4K) |
 | :---: | :---: |
-| <img src="backgrounds/11-demon-slayer-wisteria-4k.jpg" width="380" alt="Demon Slayer Wisteria"> | <img src="backgrounds/12-shinkai-meteor-sky-4k.jpg" width="380" alt="Twin Comet Twilight"> |
+| <img src="backgrounds/11-demon-slayer-wisteria-4k.jpg" width="380" alt="Demon Slayer Wisteria"> | <img src="backgrounds/12-celestial-stargazing-4k.jpg" width="380" alt="Celestial Stargazing"> |
 
 ---
 
 ## Features
 
 - **12 Curated 4K & 8K Environmental Masterpieces:**
-  - Scenery-first anime landscapes where the character and nature naturally harmonize.
+  - Scenery-first anime landscapes where character and nature naturally harmonize.
 - **Glowing Tri-Color Anime Gradient Borders:**
   - Active window borders feature a 45° luminous gradient transition: *Asuna Solar Orange* ↔ *Columbina Moon Blue* ↔ *Mitsuha Ribbon Crimson*.
 - **Glassmorphism / Frosted Acrylic Effect:**
