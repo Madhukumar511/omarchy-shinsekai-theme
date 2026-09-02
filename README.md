@@ -2,11 +2,11 @@
 
 > **Shinsekai** *(新世界)* — The Japanese concept for *New Worlds*.
 
-An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curated 4K & 8K scenery-first environmental landscape wallpapers** from iconic anime worlds, paired with a luminous OLED-optimized color palette, clean dual-tone glowing anime gradient borders, and smooth physics animations.
+An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **16 curated 4K & 8K scenery-first environmental landscape wallpapers** from iconic anime universes, paired with a luminous OLED-optimized color palette, clean dual-tone glowing anime gradient borders, and smooth physics animations.
 
 ---
 
-## Wallpaper Gallery Previews
+## Wallpaper Gallery Previews (16 Masterpieces)
 
 | 01. Asuna — Sunlit Meadow (4K) | 02. Mitsuha — Lake Itomori Sunset (4K) |
 | :---: | :---: |
@@ -32,11 +32,19 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curat
 | :---: | :---: |
 | <img src="backgrounds/11-demon-slayer-wisteria-4k.jpg" width="380" alt="Demon Slayer Wisteria"> | <img src="backgrounds/12-anime-sunset-horizon-4k.jpg" width="380" alt="Twilight Horizon"> |
 
+| 13. Fate/Stay Night — Saber in Avalon (5K) | 14. Studio Ghibli — Arrietty's Sunlit Garden (4K) |
+| :---: | :---: |
+| <img src="backgrounds/13-saber-avalon-meadow-5k.jpg" width="380" alt="Saber in Avalon"> | <img src="backgrounds/14-ghibli-arrietty-garden-4k.jpg" width="380" alt="Ghibli Arrietty Garden"> |
+
+| 15. Wistoria — Will & Elfaria Meadow (4K) | 16. Lycoris Recoil — Chisato in Sunset (4K) |
+| :---: | :---: |
+| <img src="backgrounds/15-wistoria-will-elfaria-4k.jpg" width="380" alt="Wistoria Meadow"> | <img src="backgrounds/16-chisato-sunset-nature-4k.jpg" width="380" alt="Chisato Sunset"> |
+
 ---
 
 ## Features & Visual Design
 
-- **12 Curated 4K & 8K Environmental Masterpieces:**
+- **16 Curated 4K & 8K Environmental Masterpieces:**
   - Scenery-first anime landscapes where character and vast world naturally harmonize.
 - **Clean Dual-Tone Anime Gradient Borders:**
   - Active window borders feature an elegant 45° glowing gradient:
@@ -47,8 +55,8 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curat
   - Fast, responsive cubic-bezier transitions (`shinsekaiEase`) for window popins and workspace sliding.
 - **Luminous OLED-Optimized Color Palette:**
   - Deep velvet void canvas (`#090d16`) with high-contrast starlight white text (`#f8fafc`).
-- **Integrated Tool Themes:**
-  - Custom `btop.theme`, `icons.theme` (Papirus-Dark), Neovim, VSCode, and Hyprlock lockscreen assets included.
+- **Complete Suite of Tool Themes:**
+  - `btop.theme`, `fastfetch.jsonc`, `starship.toml`, `alacritty.toml`, `kitty.conf`, `icons.theme` (Papirus-Dark), Neovim, VSCode, and Hyprlock lockscreen assets included.
 
 ---
 
@@ -100,7 +108,7 @@ omarchy theme install https://github.com/Madhukumar511/omarchy-shinsekai-theme.g
 
 ## Wallpaper Cycling
 
-Cycle between all 12 anime scenery wallpapers anytime via terminal:
+Cycle between all 16 anime scenery wallpapers anytime via terminal:
 
 ```bash
 omarchy theme bg next
