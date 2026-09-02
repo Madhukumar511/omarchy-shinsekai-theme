@@ -1,8 +1,8 @@
-# Komorebi — Scenery-First Anime Aesthetic Theme for Omarchy
+# Shinsekai (新世界) — Scenery-First Anime Aesthetic Theme for Omarchy
 
-> **Komorebi** *(木漏れ日)* — The poetic Japanese concept for *sunlight filtering through trees*.
+> **Shinsekai** *(新世界)* — The Japanese concept for *New Worlds*.
 
-An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconic 4K & 8K scenery-first environmental landscape wallpapers** paired with a luminous OLED-optimized color palette, dynamic glowing 4-color anime gradient borders, and smooth spring physics animations.
+An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curated 4K & 8K scenery-first environmental landscape wallpapers** from iconic anime worlds, paired with a luminous OLED-optimized color palette, clean dual-tone glowing anime gradient borders, and smooth physics animations.
 
 ---
 
@@ -34,22 +34,19 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconi
 
 ---
 
-## Features & Visual Enhancements
+## Features & Visual Design
 
 - **12 Curated 4K & 8K Environmental Masterpieces:**
-  - Scenery-first anime landscapes where character and nature naturally harmonize.
-- **4-Color Glowing Anime Gradient Borders:**
-  - Active window borders feature a vibrant 45° glowing anime rainbow gradient:
-    - *Sakura Blossom Pink* (`#ff3388`)
-    - *Asuna Solar Orange* (`#ff6d00`)
-    - *Electric Cyber Cyan* (`#00f0ff`)
-    - *Mitsuha Sunset Violet* (`#b344ff`)
-- **Radiant Anime Shadow Glow & Glassmorphism:**
-  - Soft neon pink-violet outer drop shadow glow with multi-pass acrylic frosted window blur.
-- **Snappy Anime Spring Physics Animations:**
-  - Smooth, responsive spring bezier curve transitions (`animeSpring`) for window popins and workspace sliding.
+  - Scenery-first anime landscapes where character and vast world naturally harmonize.
+- **Clean Dual-Tone Anime Gradient Borders:**
+  - Active window borders feature an elegant 45° glowing gradient:
+    - *Sakura Rose* (`#f43f5e`) ↔ *Celestial Azure* (`#38bdf8`)
+- **Subtle Depth & Glassmorphism:**
+  - Clean velvet shadow depth (`rgba(0,0,0,0.5)`) with multi-pass frosted acrylic glass blur.
+- **Silky Smooth Ease-Out Animations:**
+  - Fast, responsive cubic-bezier transitions (`shinsekaiEase`) for window popins and workspace sliding.
 - **Luminous OLED-Optimized Color Palette:**
-  - Deep velvet void night canvas (`#080b12`) with high-contrast starlight white text (`#f8fafc`) and neon character accents.
+  - Deep velvet void canvas (`#090d16`) with high-contrast starlight white text (`#f8fafc`).
 - **Integrated Tool Themes:**
   - Custom `btop.theme`, `icons.theme` (Papirus-Dark), Neovim, VSCode, and Hyprlock lockscreen assets included.
 
@@ -59,14 +56,14 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconi
 
 | Color | Hex | Role |
 | :--- | :--- | :--- |
-| **Background** | `#080b12` | Deep void celestial canvas |
+| **Background** | `#090d16` | Deep void night canvas |
 | **Foreground** | `#f8fafc` | Crisp starlight mist white |
-| **Accent Primary** | `#ff3388` | Sakura Blossom Neon Pink |
-| **Accent Secondary** | `#ff6d00` | Asuna Solar Flare Orange |
-| **Cyan** | `#00f0ff` | Electric Cyber Stream |
-| **Purple** | `#b344ff` | Mitsuha Sunset Violet |
-| **Green** | `#00e676` | Lake Itomori Emerald |
-| **Yellow** | `#ffd600` | Solar Comet Gold |
+| **Accent Primary** | `#f43f5e` | Sakura Rose Pink |
+| **Accent Secondary** | `#38bdf8` | Celestial Azure Blue |
+| **Green** | `#10b981` | Lake Emerald |
+| **Yellow** | `#f59e0b` | Solar Flare Gold |
+| **Purple** | `#c084fc` | Sunset Violet |
+| **Cyan** | `#06b6d4` | Electric Aqua |
 
 ---
 
@@ -89,26 +86,15 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconi
 Run the Omarchy theme installer:
 
 ```bash
-omarchy theme install https://github.com/Madhukumar511/omarchy-komorebi-theme.git
+omarchy theme install https://github.com/Madhukumar511/omarchy-shinsekai-theme.git
 ```
 
 ### Walker Menu
 
-1. Copy the repo link: `https://github.com/Madhukumar511/omarchy-komorebi-theme.git`
+1. Copy the repo link: `https://github.com/Madhukumar511/omarchy-shinsekai-theme.git`
 2. Open Walker / Omarchy menu (`SUPER + ALT + SPACE` or `SUPER + SPACE`)
 3. Navigate: **Install > Style > Theme**
 4. Paste URL and press **Enter**
-
----
-
-## Optional: Enable Glowing Borders & Anime Physics
-
-To enable the 4-color glowing anime rainbow borders and spring animations, copy `hyprland.lua` into your Hyprland configuration:
-
-```bash
-cp ~/.config/omarchy/themes/komorebi/hyprland.lua ~/.config/hypr/looknfeel.lua
-hyprctl reload
-```
 
 ---
 

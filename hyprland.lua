@@ -1,11 +1,12 @@
--- Komorebi Anime Theme - Glowing Neon Gradient Borders & Spring Physics
-local active_border_color = { colors = { "rgba(ff3388ee)", "rgba(ff6d00ee)", "rgba(00f0ffee)", "rgba(b344ffee)" }, angle = 45 }
-local inactive_border_color = "rgba(0f172a88)"
+-- Shinsekai (新世界) Anime Theme for Hyprland
+-- Clean dual-tone Sakura Rose & Celestial Azure gradient borders with subtle depth
+local active_border_color = { colors = { "rgba(f43f5eee)", "rgba(38bdf8ee)" }, angle = 45 }
+local inactive_border_color = "rgba(0f172a66)"
 
 hl.config({
   general = {
-    gaps_in = 6,
-    gaps_out = 12,
+    gaps_in = 5,
+    gaps_out = 10,
     border_size = 2,
     col = {
       active_border = active_border_color,
@@ -13,44 +14,43 @@ hl.config({
     },
   },
   decoration = {
-    rounding = 12,
-    active_opacity = 0.94,
-    inactive_opacity = 0.85,
+    rounding = 10,
+    active_opacity = 0.96,
+    inactive_opacity = 0.88,
     dim_inactive = true,
-    dim_strength = 0.15,
+    dim_strength = 0.12,
     blur = {
       enabled = true,
-      size = 8,
+      size = 6,
       passes = 3,
       new_optimizations = true,
       xray = false,
       ignore_opacity = false,
-      noise = 0.015,
+      noise = 0.01,
       contrast = 0.95,
-      brightness = 0.85,
+      brightness = 0.88,
       popups = true,
     },
     shadow = {
       enabled = true,
-      range = 25,
-      render_power = 4,
-      color = "rgba(ff338844)",
-      color_inactive = "rgba(00000066)",
+      range = 18,
+      render_power = 3,
+      color = "rgba(00000088)",
+      color_inactive = "rgba(00000055)",
     },
   },
   animations = {
     enabled = true,
     bezier = {
-      "animeSpring, 0.34, 1.56, 0.64, 1",
-      "animeSmooth, 0.16, 1, 0.3, 1",
+      "shinsekaiEase, 0.16, 1, 0.3, 1",
     },
     animation = {
-      "windows, 1, 5, animeSpring, popin 75%",
-      "windowsOut, 1, 4, default, popin 80%",
-      "windowsMove, 1, 5, animeSmooth",
-      "border, 1, 10, default",
-      "fade, 1, 4, default",
-      "workspaces, 1, 5, animeSmooth, slide",
+      "windows, 1, 4, shinsekaiEase, popin 85%",
+      "windowsOut, 1, 3, default, popin 85%",
+      "windowsMove, 1, 4, shinsekaiEase",
+      "border, 1, 6, default",
+      "fade, 1, 3, default",
+      "workspaces, 1, 4, shinsekaiEase, slide",
     },
   },
   group = {
