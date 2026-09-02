@@ -24,13 +24,13 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 iconi
 | :---: | :---: |
 | <img src="backgrounds/07-suzume-door-starry-4k.jpg" width="380" alt="Suzume Door"> | <img src="backgrounds/08-weathering-with-you-8k.jpg" width="380" alt="Weathering With You"> |
 
-| 09. Wuthering Waves — Solaris Landscape (4K) | 10. Cyberpunk Edgerunners — Moon Skyline (5K) |
+| 09. Wuthering Waves — Chixia (4K) | 10. Cyberpunk Edgerunners — Moon Skyline (5K) |
 | :---: | :---: |
-| <img src="backgrounds/09-wuthering-waves-4k.jpg" width="380" alt="Wuthering Waves"> | <img src="backgrounds/10-edgerunners-moon-4k.jpg" width="380" alt="Edgerunners Moon"> |
+| <img src="backgrounds/09-wuthering-waves-chixia-4k.jpg" width="380" alt="Wuthering Waves Chixia"> | <img src="backgrounds/10-edgerunners-moon-4k.jpg" width="380" alt="Edgerunners Moon"> |
 
-| 11. Demon Slayer — Wisteria Mountain (4K) | 12. Wistoria: Wand and Sword — Magic & Blade (4K) |
+| 11. Demon Slayer — Wisteria Mountain (4K) | 12. Wistoria: Wand and Sword — Will & Elfaria (4K) |
 | :---: | :---: |
-| <img src="backgrounds/11-demon-slayer-wisteria-4k.jpg" width="380" alt="Demon Slayer Wisteria"> | <img src="backgrounds/12-wistoria-wand-and-sword-4k.jpg" width="380" alt="Wistoria Wand and Sword"> |
+| <img src="backgrounds/11-demon-slayer-wisteria-4k.jpg" width="380" alt="Demon Slayer Wisteria"> | <img src="backgrounds/12-wistoria-will-elfaria-4k.jpg" width="380" alt="Wistoria Will and Elfaria"> |
 
 ---
 
