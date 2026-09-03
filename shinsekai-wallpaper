@@ -40,7 +40,7 @@ def get_clipboard_text():
 def resolve_smart_url(url):
     url = url.strip().strip("'\"")
     
-    # 1. Google Images URL unpack
+    # 1. Google Images direct image unpack
     if "google." in url and "imgurl=" in url:
         parsed = urllib.parse.urlparse(url)
         params = urllib.parse.parse_qs(parsed.query)
@@ -49,7 +49,7 @@ def resolve_smart_url(url):
             print(f"\033[1;33m🔍 Extracted direct image from Google Images:\033[0m {real_url}")
             return real_url
 
-    # 2. Wallhaven page URL unpack (e.g. wallhaven.cc/w/z8opey)
+    # 2. Wallhaven page URL unpack
     m = re.search(r'wallhaven\.cc/w/([a-z0-9]+)', url)
     if m:
         wid = m.group(1)
@@ -59,28 +59,28 @@ def resolve_smart_url(url):
             with urllib.request.urlopen(req, timeout=5) as resp:
                 data = json.loads(resp.read().decode('utf-8'))
                 direct_path = data['data']['path']
-                print(f"\033[1;33m🔍 Resolved full Wallhaven 4K/8K path:\033[0m {direct_path}")
+                print(f"\033[1;33m🔍 Resolved full Wallhaven 4K/8K image:\033[0m {direct_path}")
                 return direct_path
         except Exception:
             pass
 
-    # 3. WallpaperFlare page URL unpack
-    if "wallpaperflare.com" in url and not url.endswith(('.jpg', '.jpeg', '.png', '.webp')):
-        try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req, timeout=5) as resp:
-                html = resp.read().decode('utf-8', errors='ignore')
-                img_match = re.search(r'<img[^>]+id=[\'"]show_img[\'"][^>]+src=[\'"]([^\'"]+)[\'"]', html)
-                if not img_match:
-                    img_match = re.search(r'data-src=[\'"](https://c4\.wallpaperflare\.com/wallpaper/[^\'"]+)[\'"]', html)
-                if img_match:
-                    direct_img = img_match.group(1)
-                    print(f"\033[1;33m🔍 Resolved full WallpaperFlare image:\033[0m {direct_img}")
-                    return direct_img
-        except Exception:
-            pass
-
     return url
+
+def download_file_with_curl(url, dest):
+    """Robust download using curl with modern browser User-Agent, referer, and redirects."""
+    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+    cmd = [
+        "curl", "-s", "-L", "--fail",
+        "-A", user_agent,
+        "--referer", url,
+        "--compressed",
+        "--connect-timeout", "10",
+        "--max-time", "30",
+        "-o", dest,
+        url
+    ]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    return res.returncode == 0
 
 def get_image_info(path):
     cmd = f'magick identify -format "%w %h %m %b" "{path}"'
@@ -126,13 +126,19 @@ def add_wallpaper(source, custom_name=None):
 
     if clean_source.startswith("http://") or clean_source.startswith("https://"):
         print(f"\033[1;34m⬇️ Downloading wallpaper:\033[0m {clean_source}")
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
-        req = urllib.request.Request(clean_source, headers=headers)
-        try:
-            with urllib.request.urlopen(req, timeout=15) as resp, open(temp_file, "wb") as f:
-                f.write(resp.read())
-        except Exception as e:
-            print(f"\033[1;31m❌ Download failed: {e}\033[0m")
+        ok = download_file_with_curl(clean_source, temp_file)
+        if not ok or not os.path.exists(temp_file) or os.path.getsize(temp_file) == 0:
+            print(f"\033[1;31m❌ Download failed (Forbidden / Blocked by website protection).\033[0m")
+            print("""
+\033[1;33m💡 Quick Fix for Webpage Links:\033[0m
+  You pasted a website page URL instead of the direct image file.
+  \033[1;32m👉 Right-click the image in your browser\033[0m and choose:
+     \033[1m• 'Copy image address'\033[0m (or 'Copy image link')
+  Then paste it into \033[1;36mshin-bg\033[0m!
+
+  \033[1;32m👉 Or download the image to ~/Downloads and run:\033[0m
+     \033[1;36mshin-bg add ~/Downloads/my-image.jpg\033[0m
+""")
             return
     else:
         src_path = os.path.expanduser(clean_source)
@@ -143,7 +149,8 @@ def add_wallpaper(source, custom_name=None):
 
     w, h, fmt, size = get_image_info(temp_file)
     if w == 0 or h == 0:
-        print("\033[1;31m❌ Invalid or unreadable image file.\033[0m")
+        print("\033[1;31m❌ Downloaded file is not a valid image.\033[0m")
+        print("\033[1;33m💡 Make sure to copy the direct image link ('Copy image address') rather than the webpage link.\033[0m")
         return
 
     print(f"\033[1;34m🔍 Resolution:\033[0m {w}x{h} ({fmt}) | Size: {size}")
@@ -391,7 +398,7 @@ def parse_and_execute(cmd_line):
         name = parts[1] if len(parts) > 1 else None
         add_wallpaper(action, name)
     else:
-        print(f"\033[1;31mUnknown command '{action}'. Type 'list', 'set <number>', 'add <url>', 'remove <number>', or 'restore <number>'.\033[0m")
+        print(f"\033[1;31mUnknown command '{action}'. Type 'list', 'set <number>', 'add <url>', or 'remove <number>'.\033[0m")
 
 def interactive_loop():
     print_banner()
@@ -399,7 +406,7 @@ def interactive_loop():
     
     clip = get_clipboard_text()
     if clip.startswith("http://") or clip.startswith("https://") or (os.path.exists(os.path.expanduser(clip)) and clip.lower().endswith(('.jpg', '.png', '.jpeg', '.webp'))):
-        print(f"\033[1;33m📋 Detected image link in clipboard:\033[0m {clip}")
+        print(f"\033[1;33m📋 Detected link/file in clipboard:\033[0m {clip}")
         use_clip = input("\033[1mDownload & add this clipboard wallpaper now? [Y/n]: \033[0m").strip().lower()
         if use_clip in ["", "y", "yes"]:
             name = input("\033[1mWallpaper Name (optional, press Enter to auto-name): \033[0m").strip() or None
