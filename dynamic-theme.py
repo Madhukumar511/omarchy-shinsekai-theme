@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 import subprocess, re, os, colorsys, sys
 
+THEME_NAME_FILE = os.path.expanduser("~/.local/state/omarchy/current/theme.name")
+
+def is_shinsekai_active():
+    if os.path.exists(THEME_NAME_FILE):
+        try:
+            with open(THEME_NAME_FILE, "r") as f:
+                return f.read().strip().lower() == "shinsekai"
+        except Exception:
+            pass
+    return False
+
 def get_current_background():
     bg_link = os.path.expanduser("~/.local/state/omarchy/current/background")
     if os.path.exists(bg_link):
@@ -33,13 +44,10 @@ def extract_hue_clustered_palette(image_path):
             b = int(hex_col[5:7], 16) / 255.0
             h, s, v = colorsys.rgb_to_hsv(r, g, b)
             
-            # Filter pure dark mud and washed-out shadows (V < 0.28 or S < 0.20)
             if v < 0.28 or s < 0.20:
                 continue
                 
             bin_idx = int((h * 360) // 30) % 12
-            
-            # Radiant Chroma & Luma weighting (rewards true vibrant scenery & sunset highlights)
             weight = count * (s ** 2.2) * (v ** 2.0)
             
             bins[bin_idx].append({
@@ -90,6 +98,10 @@ def extract_hue_clustered_palette(image_path):
     }
 
 def apply_dynamic_theme(image_path=None):
+    if not is_shinsekai_active():
+        # Never touch other active themes
+        return
+
     if not image_path:
         image_path = get_current_background()
         
@@ -100,7 +112,7 @@ def apply_dynamic_theme(image_path=None):
     theme_dir = os.path.expanduser("~/.config/omarchy/themes/shinsekai")
     current_theme_dir = os.path.expanduser("~/.local/state/omarchy/current/theme")
     
-    # 1. Update chromium.theme in theme folder AND active state folder
+    # 1. Update chromium.theme
     rgb_str = f"{primary['r']},{primary['g']},{primary['b']}\n"
     with open(os.path.join(theme_dir, "chromium.theme"), "w") as f:
         f.write(rgb_str)
@@ -141,6 +153,10 @@ color15 = "#ffffff"
     with open(os.path.join(theme_dir, "colors.toml"), "w") as f:
         f.write(colors_toml)
         
+    if os.path.exists(current_theme_dir):
+        with open(os.path.join(current_theme_dir, "colors.toml"), "w") as f:
+            f.write(colors_toml)
+
     # 3. Update hyprland.lua & looknfeel.lua
     hypr_lua = f"""-- Shinsekai Dynamic Anime Theme for Hyprland
 local active_border_color = {{ colors = {{ "rgba({primary['r']:02x}{primary['g']:02x}{primary['b']:02x}ee)", "rgba({secondary['r']:02x}{secondary['g']:02x}{secondary['b']:02x}ee)" }}, angle = 45 }}
@@ -216,10 +232,10 @@ hl.config({{
     subprocess.run("brave --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
     subprocess.run("chromium --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
 
-    # 5. Full OS Theme Pipeline & Hyprland reload
-    env = os.environ.copy()
-    env["OMARCHY_THEME_SKIP_BACKGROUND"] = "1"
-    subprocess.run("omarchy-theme-set shinsekai >/dev/null 2>&1", shell=True, env=env)
+    # 5. Apply templates directly without recursive theme switching
+    subprocess.run("omarchy-theme-set-templates >/dev/null 2>&1", shell=True)
+    subprocess.run("omarchy-theme-set-hyprland >/dev/null 2>&1", shell=True)
+    subprocess.run("omarchy-restart-terminal >/dev/null 2>&1 &", shell=True)
     subprocess.run("hyprctl reload >/dev/null 2>&1", shell=True)
     
     print(f"[Shinsekai Dynamic] High-contrast theme applied for: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
