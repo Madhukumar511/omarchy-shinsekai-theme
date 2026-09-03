@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import subprocess, re, os, colorsys, sys, base64
+import subprocess, re, os, colorsys, sys
 
 def get_current_background():
     bg_link = os.path.expanduser("~/.local/state/omarchy/current/background")
@@ -61,7 +61,6 @@ def apply_dynamic_theme(image_path=None):
         return
         
     primary, secondary = extract_vibrant_colors(image_path)
-    
     theme_dir = os.path.expanduser("~/.config/omarchy/themes/shinsekai")
     
     # 1. Update chromium.theme
@@ -100,12 +99,6 @@ color15 = "#ffffff"
     with open(os.path.join(theme_dir, "colors.toml"), "w") as f:
         f.write(colors_toml)
         
-    # Also update the staged current theme colors if present
-    current_theme_colors = os.path.expanduser("~/.local/state/omarchy/current/theme/colors.toml")
-    if os.path.exists(current_theme_colors):
-        with open(current_theme_colors, "w") as f:
-            f.write(colors_toml)
-
     # 3. Update hyprland.lua & looknfeel.lua
     hypr_lua = f"""-- Shinsekai Dynamic Anime Theme for Hyprland
 local active_border_color = {{ colors = {{ "rgba({primary['r']:02x}{primary['g']:02x}{primary['b']:02x}ee)", "rgba({secondary['r']:02x}{secondary['g']:02x}{secondary['b']:02x}ee)" }}, angle = 45 }}
@@ -176,23 +169,13 @@ hl.config({{
     with open(looknfeel_path, "w") as f:
         f.write(hypr_lua)
 
-    # 4. Trigger Omarchy full system & shell theme refresh
-    # This automatically updates Top Bar (QuickShell), Walker launcher, Mako notifications,
-    # SwayOSD overlays, Brave/Chromium, GTK apps, open terminals, Btop, and VSCode!
+    # 4. Trigger full Omarchy OS theme pipeline
     env = os.environ.copy()
     env["OMARCHY_THEME_SKIP_BACKGROUND"] = "1"
-    subprocess.run("omarchy-theme-set-templates 2>/dev/null", shell=True, env=env)
-    subprocess.run("omarchy-theme-set-browser 2>/dev/null", shell=True, env=env)
-    subprocess.run("omarchy-theme-set-gnome 2>/dev/null", shell=True, env=env)
-    subprocess.run("omarchy-restart-terminal 2>/dev/null", shell=True, env=env)
-    subprocess.run("omarchy-restart-btop 2>/dev/null", shell=True, env=env)
-    subprocess.run("hyprctl reload 2>&1 >/dev/null", shell=True)
+    subprocess.run("omarchy-theme-set shinsekai >/dev/null 2>&1", shell=True, env=env)
+    subprocess.run("hyprctl reload >/dev/null 2>&1", shell=True)
     
-    # Update running omarchy-shell bar via IPC
-    colors_b64 = base64.b64encode(colors_toml.encode('utf-8')).decode('utf-8')
-    subprocess.run(f"omarchy-shell -q shell applyTheme '{colors_b64}' '' 2>/dev/null", shell=True)
-    
-    print(f"Full system dynamic theme applied for: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
+    print(f"[Shinsekai Dynamic] Synchronized full system: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
 
 if __name__ == "__main__":
     img = sys.argv[1] if len(sys.argv) > 1 else None
