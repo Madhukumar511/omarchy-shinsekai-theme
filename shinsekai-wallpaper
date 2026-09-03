@@ -14,12 +14,14 @@ def print_banner():
 """)
 
 def print_commands_menu():
-    print("""\033[1;33mAvailable Commands:\033[0m
-  \033[1;32madd <url-or-path> [name]\033[0m   Download & add 4K wallpaper (auto-assigned next number)
-  \033[1;32mlist\033[0m                      View all wallpapers with their assigned numbers [01-12]
+    total = len(get_all_wallpapers())
+    max_label = f"[01-{total:02d}]" if total > 0 else "[01-N]"
+    print(f"""\033[1;33mAvailable Commands:\033[0m
+  \033[1;32madd <url-or-path> [name]\033[0m   Download & add 4K wallpaper (auto-assigned next sequential number)
+  \033[1;32mlist\033[0m                      View all wallpapers with their assigned numbers {max_label}
   \033[1;32mset <number>\033[0m              Switch active wallpaper by number (e.g. \033[36mset 4\033[0m)
-  \033[1;32mremove <number>\033[0m           Delete wallpaper to trash (e.g. \033[36mremove 12\033[0m)
-  \033[1;32mrestore [number]\033[0m          Undo / Restore deleted wallpaper (e.g. \033[36mrestore 12\033[0m or \033[36mundo\033[0m)
+  \033[1;32mremove <number>\033[0m           Delete wallpaper to recovery trash (e.g. \033[36mremove 13\033[0m)
+  \033[1;32mrestore [number]\033[0m          Undo / Restore deleted wallpaper (e.g. \033[36mrestore 13\033[0m or \033[36mundo\033[0m)
   \033[1;32mtrash\033[0m                     View deleted wallpapers in recovery trash
   \033[1;32mnext\033[0m                      Cycle to next wallpaper
   \033[1;32mcurrent\033[0m                   Show currently active wallpaper
@@ -224,7 +226,6 @@ def remove_wallpaper(target):
         print(f"\033[1;31m❌ Wallpaper #{target} not found. Run 'list' to view numbers.\033[0m")
         return
 
-    # Move to trash instead of permanent delete (Trash Recovery System)
     os.makedirs(TRASH_DIR, exist_ok=True)
     src_path = os.path.join(BG_DIR, to_delete)
     trash_path = os.path.join(TRASH_DIR, to_delete)
@@ -242,7 +243,6 @@ def remove_wallpaper(target):
     subprocess.run("omarchy theme bg next 2>/dev/null || true", shell=True)
 
 def restore_wallpaper(target=None):
-    """Restores deleted wallpaper from recovery trash."""
     history = load_trash_history()
     if not history:
         print("\033[1;33mℹ️ Recovery trash is empty. No deleted wallpapers to restore.\033[0m")
@@ -264,7 +264,6 @@ def restore_wallpaper(target=None):
                     to_restore_entry = item
                     break
     else:
-        # Restore most recent
         to_restore_entry = history[-1]
 
     if not to_restore_entry:
@@ -381,6 +380,8 @@ def parse_and_execute(cmd_line):
         subprocess.run("omarchy theme bg next", shell=True)
     elif action in ["current", "status"]:
         subprocess.run("omarchy theme bg current", shell=True)
+    elif action in ["help", "-h", "--help", "menu"]:
+        print_commands_menu()
     elif action in ["exit", "quit", "q", "8"]:
         print("Exiting.")
         sys.exit(0)
