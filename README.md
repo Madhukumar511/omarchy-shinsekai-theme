@@ -1,4 +1,4 @@
-# Shinsekai (新世界) — Dynamic Scenery-First Anime Aesthetic Theme for Omarchy
+# Shinsekai (新世界) — Dynamic Anime Aesthetic Theme for Omarchy
 
 <p align="center">
   <img src="preview.png" width="850" alt="Shinsekai Theme Preview">
@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>新世界 (Shinsekai) — <em>"New Worlds"</em></strong><br>
-  An intelligent, scenery-first anime theme for <strong>Omarchy Linux & Hyprland</strong> featuring <strong>12 curated 4K & 8K environmental landscape wallpapers</strong> with <strong>Real-Time Dynamic Color Adaptation</strong>.
+  A curated anime visual theme for <strong>Omarchy Linux & Hyprland</strong> featuring <strong>12 iconic 4K & 8K anime landscapes, celestial skies, and character art</strong> with <strong>Real-Time Dynamic Color Adaptation</strong>.
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 
 ## Table of Contents
 
-- [Overview & Philosophy](#overview--philosophy)
+- [Overview](#overview)
 - [Key Features](#key-features)
 - [Wallpaper Gallery (12 Masterpieces)](#wallpaper-gallery-12-masterpieces)
 - [How Dynamic Theming Works](#how-dynamic-theming-works)
@@ -33,13 +33,13 @@
 
 ---
 
-## Overview & Philosophy
+## Overview
 
-**Shinsekai** was designed around a single guiding principle: **Scenery First**.
+**Shinsekai (新世界)** brings together iconic anime universes into a single, cohesive desktop experience.
 
-When someone glances at your desktop, they should be struck by the vast, breathtaking environmental landscape first, with iconic anime characters harmoniously integrated into their world.
+From vast open meadows and Lake Itomori sunsets to celestial snow peaks, wisteria mountain trails, neon moonlit skylines, and striking character art, each wallpaper brings a distinct atmosphere.
 
-Powered by a custom **Hue-Clustered Dynamic Color Engine**, every window border, the top bar, browser accents, terminal text, launcher, and notifications automatically adapt in real-time to match whichever wallpaper you select.
+Powered by a custom **Hue-Clustered Dynamic Color Engine**, your entire system—window borders, top bar, browser accents, terminal syntax, launcher, and notifications—automatically adapts in real-time to match whichever wallpaper you choose.
 
 ---
 
@@ -51,9 +51,9 @@ Powered by a custom **Hue-Clustered Dynamic Color Engine**, every window border,
   - Updates Brave/Chromium browser theme, top bar (Omarchy QuickShell), Walker launcher, and GTK apps instantly.
 - **Luminance & Contrast Guard**:
   - Enforces minimum brightness (`v >= 0.88`) on all dynamically extracted accent colors.
-  - Guarantees 100% crisp terminal text readability and WCAG contrast even on dark or dull wallpapers.
-- **12 Curated 4K & 8K Environmental Masterpieces**:
-  - Uncompressed, high-definition art across iconic anime universes (*Sword Art Online, Your Name, Genshin Impact, Frieren, Violet Evergarden, Studio Ghibli, Suzume, Weathering With You, Wuthering Waves, Cyberpunk Edgerunners, Demon Slayer, and Twilight Horizon*).
+  - Guarantees 100% crisp terminal text readability and WCAG contrast even on dark or muted backgrounds.
+- **12 Curated 4K & 8K Visual Masterpieces**:
+  - High-definition art across iconic anime universes (*Sword Art Online, Your Name, Genshin Impact, Frieren, Violet Evergarden, Studio Ghibli, Suzume, Weathering With You, Wuthering Waves, Cyberpunk Edgerunners, Demon Slayer, and Twilight Horizon*).
 - **Glowing Anime Gradient Borders & Acrylic Glassmorphism**:
   - 45° glowing dual-tone active window borders with multi-pass frosted glass blur and subtle deep velvet shadows.
 - **Silky Spring Animations**:
@@ -94,7 +94,7 @@ Powered by a custom **Hue-Clustered Dynamic Color Engine**, every window border,
 ## How Dynamic Theming Works
 
 1. **Background Detection**: A background service (`shinsekai-watcher.py`) monitors wallpaper symlink changes with zero CPU overhead.
-2. **Hue Clustering**: Quantizes wallpaper into 12 distinct Hue sectors (30° bins) to aggregate color weight and identify true dominant environmental landscapes (e.g. green hills vs purple accents).
+2. **Hue Clustering**: Quantizes wallpaper into 12 distinct Hue sectors (30° bins) to aggregate color weight and identify the true dominant atmosphere of the artwork.
 3. **Full-Desktop Broadcast**:
    - Triggers `omarchy-theme-set` to update the top bar, Walker launcher, SwayOSD, and GTK apps.
    - Retints Brave/Chromium browser via policy JSON.
@@ -104,7 +104,7 @@ Powered by a custom **Hue-Clustered Dynamic Color Engine**, every window border,
 
 ## Luminance & Readability Guard
 
-To prevent dark or muted wallpapers from making terminal text and syntax highlighting dim:
+To prevent dark or muted backgrounds from making terminal text and syntax highlighting dim:
 - **Locked Foreground**: Pure starlight white (`#f8fafc`) for base text.
 - **Brightness Floor (`v >= 0.88`)**: Automatically lifts dark tones into clear, luminous pastel/neon highlights.
 - **Guaranteed WCAG Contrast**: Eliminates unreadable command arguments across all 12 wallpapers.
@@ -175,7 +175,7 @@ Shinsekai ships with complete styling templates for all major tools:
 
 ```
 ~/.config/omarchy/themes/shinsekai/
-├── backgrounds/                # 12 Curated 4K/8K Anime Scenery Wallpapers
+├── backgrounds/                # 12 Curated 4K/8K Anime Wallpapers
 ├── dynamic-theme.py           # Hue-Clustering Dynamic Color Extractor & System Sync
 ├── shinsekai-watcher.py       # Background Watcher Daemon
 ├── shinsekai-daemon.sh        # Standalone Bash Watcher
