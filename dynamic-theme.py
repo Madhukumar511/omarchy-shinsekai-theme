@@ -9,9 +9,7 @@ def get_current_background():
 
 def boost_color_for_readability(r, g, b, min_s=0.55, target_v=0.88):
     h, s, v = colorsys.rgb_to_hsv(r/255.0, g/255.0, b/255.0)
-    # Ensure optimal saturation (not washed out, not blinding)
     s = max(min(s, 0.85), min_s)
-    # Ensure luminous high brightness for crystal-clear readability against dark backgrounds
     v = max(min(v, 0.98), target_v)
     nr, ng, nb = colorsys.hsv_to_rgb(h, s, v)
     hex_code = f"#{int(nr*255):02x}{int(ng*255):02x}{int(nb*255):02x}"
@@ -21,7 +19,6 @@ def extract_hue_clustered_palette(image_path):
     cmd = f'magick "{image_path}" -resize 120x120! -colors 32 -format "%c" histogram:info:'
     res = subprocess.run(cmd, shell=True, capture_output=True, text=True).stdout
     
-    # 12 hue bins (30 deg each)
     bins = [[] for _ in range(12)]
     
     for line in res.strip().split('\n'):
@@ -36,7 +33,6 @@ def extract_hue_clustered_palette(image_path):
             b = int(hex_col[5:7], 16) / 255.0
             h, s, v = colorsys.rgb_to_hsv(r, g, b)
             
-            # Filter pure grays/blacks
             if v < 0.12 or (s < 0.12 and v > 0.88):
                 continue
                 
@@ -97,12 +93,18 @@ def apply_dynamic_theme(image_path=None):
         
     primary, secondary = extract_hue_clustered_palette(image_path)
     theme_dir = os.path.expanduser("~/.config/omarchy/themes/shinsekai")
+    current_theme_dir = os.path.expanduser("~/.local/state/omarchy/current/theme")
     
-    # 1. Update chromium.theme
+    # 1. Update chromium.theme in theme folder AND active state folder
+    rgb_str = f"{primary['r']},{primary['g']},{primary['b']}\n"
     with open(os.path.join(theme_dir, "chromium.theme"), "w") as f:
-        f.write(f"{primary['r']},{primary['g']},{primary['b']}\n")
+        f.write(rgb_str)
         
-    # 2. Update colors.toml (with guaranteed high-contrast white foreground and crisp luminous ANSI accents)
+    if os.path.exists(current_theme_dir):
+        with open(os.path.join(current_theme_dir, "chromium.theme"), "w") as f:
+            f.write(rgb_str)
+
+    # 2. Update colors.toml
     colors_toml = f"""accent = "{primary['hex']}"
 cursor = "{secondary['hex']}"
 foreground = "#f8fafc"
@@ -204,7 +206,12 @@ hl.config({{
     with open(looknfeel_path, "w") as f:
         f.write(hypr_lua)
 
-    # 4. Trigger full Omarchy OS theme pipeline
+    # 4. Instant Browser Policy Update & Live Refresh
+    subprocess.run("omarchy-theme-set-browser >/dev/null 2>&1", shell=True)
+    subprocess.run("brave --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
+    subprocess.run("chromium --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
+
+    # 5. Full OS Theme Pipeline & Hyprland reload
     env = os.environ.copy()
     env["OMARCHY_THEME_SKIP_BACKGROUND"] = "1"
     subprocess.run("omarchy-theme-set shinsekai >/dev/null 2>&1", shell=True, env=env)
