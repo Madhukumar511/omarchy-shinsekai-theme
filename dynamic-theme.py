@@ -18,9 +18,11 @@ def get_current_background():
         return os.path.realpath(bg_link)
     return os.path.expanduser("~/.config/omarchy/themes/shinsekai/backgrounds/01-asuna-meadow-nature.png")
 
-def boost_color_for_readability(r, g, b, min_s=0.55, target_v=0.88):
+def boost_color_for_readability(r, g, b, min_s=0.55, target_v=0.92):
     h, s, v = colorsys.rgb_to_hsv(r/255.0, g/255.0, b/255.0)
-    s = max(min(s, 0.85), min_s)
+    # Balanced saturation
+    s = max(min(s, 0.82), min_s)
+    # High luminous brightness floor for crystal-clear readability
     v = max(min(v, 0.98), target_v)
     nr, ng, nb = colorsys.hsv_to_rgb(h, s, v)
     hex_code = f"#{int(nr*255):02x}{int(ng*255):02x}{int(nb*255):02x}"
@@ -88,8 +90,8 @@ def extract_hue_clustered_palette(image_path):
         raw_p = {'r': 239, 'g': 68, 'b': 68}
         raw_s = {'r': 245, 'g': 158, 'b': 11}
         
-    p_hex, pr, pg, pb = boost_color_for_readability(raw_p['r'], raw_p['g'], raw_p['b'], min_s=0.55, target_v=0.88)
-    s_hex, sr, sg, sb = boost_color_for_readability(raw_s['r'], raw_s['g'], raw_s['b'], min_s=0.50, target_v=0.84)
+    p_hex, pr, pg, pb = boost_color_for_readability(raw_p['r'], raw_p['g'], raw_p['b'], min_s=0.55, target_v=0.92)
+    s_hex, sr, sg, sb = boost_color_for_readability(raw_s['r'], raw_s['g'], raw_s['b'], min_s=0.50, target_v=0.88)
     
     return {
         'hex': p_hex, 'r': pr, 'g': pg, 'b': pb
@@ -99,7 +101,6 @@ def extract_hue_clustered_palette(image_path):
 
 def apply_dynamic_theme(image_path=None):
     if not is_shinsekai_active():
-        # Never touch other active themes
         return
 
     if not image_path:
@@ -121,12 +122,12 @@ def apply_dynamic_theme(image_path=None):
         with open(os.path.join(current_theme_dir, "chromium.theme"), "w") as f:
             f.write(rgb_str)
 
-    # 2. Update colors.toml
+    # 2. Update colors.toml (Foreground matches wallpaper accent color with boosted luminous brightness)
     colors_toml = f"""accent = "{primary['hex']}"
 cursor = "{secondary['hex']}"
-foreground = "#f8fafc"
+foreground = "{primary['hex']}"
 background = "#090d16"
-selection_foreground = "#ffffff"
+selection_foreground = "#090d16"
 selection_background = "{primary['hex']}"
 
 # Dynamic Window Borders
@@ -140,7 +141,7 @@ color3 = "#f59e0b"
 color4 = "{primary['hex']}"
 color5 = "{secondary['hex']}"
 color6 = "#06b6d4"
-color7 = "#e2e8f0"
+color7 = "{primary['hex']}"
 color8 = "#334155"
 color9 = "#f87171"
 color10 = "#34d399"
@@ -232,13 +233,13 @@ hl.config({{
     subprocess.run("brave --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
     subprocess.run("chromium --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
 
-    # 5. Apply templates directly without recursive theme switching
+    # 5. Render templates & live-retint open terminals
     subprocess.run("omarchy-theme-set-templates >/dev/null 2>&1", shell=True)
     subprocess.run("omarchy-theme-set-hyprland >/dev/null 2>&1", shell=True)
-    subprocess.run("omarchy-restart-terminal >/dev/null 2>&1 &", shell=True)
+    subprocess.run("omarchy-restart-terminal >/dev/null 2>&1", shell=True)
     subprocess.run("hyprctl reload >/dev/null 2>&1", shell=True)
     
-    print(f"[Shinsekai Dynamic] High-contrast theme applied for: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
+    print(f"[Shinsekai Dynamic] Theme matched to wallpaper: {os.path.basename(image_path)} -> Foreground/Accent: {primary['hex']} | Glow: {secondary['hex']}", flush=True)
 
 if __name__ == "__main__":
     img = sys.argv[1] if len(sys.argv) > 1 else None
