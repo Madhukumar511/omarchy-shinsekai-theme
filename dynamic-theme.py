@@ -20,9 +20,7 @@ def get_current_background():
 
 def boost_color_for_readability(r, g, b, min_s=0.55, target_v=0.92):
     h, s, v = colorsys.rgb_to_hsv(r/255.0, g/255.0, b/255.0)
-    # Balanced saturation
     s = max(min(s, 0.82), min_s)
-    # High luminous brightness floor for crystal-clear readability
     v = max(min(v, 0.98), target_v)
     nr, ng, nb = colorsys.hsv_to_rgb(h, s, v)
     hex_code = f"#{int(nr*255):02x}{int(ng*255):02x}{int(nb*255):02x}"
@@ -110,19 +108,18 @@ def apply_dynamic_theme(image_path=None):
         return
         
     primary, secondary = extract_hue_clustered_palette(image_path)
-    theme_dir = os.path.expanduser("~/.config/omarchy/themes/shinsekai")
-    current_theme_dir = os.path.expanduser("~/.local/state/omarchy/current/theme")
+    p_hex_clean = primary['hex'].lstrip('#')
+    s_hex_clean = secondary['hex'].lstrip('#')
+    
+    theme_dirs = [
+        os.path.expanduser("~/.config/omarchy/themes/shinsekai"),
+        os.path.expanduser("~/.local/state/omarchy/current/theme")
+    ]
     
     # 1. Update chromium.theme
     rgb_str = f"{primary['r']},{primary['g']},{primary['b']}\n"
-    with open(os.path.join(theme_dir, "chromium.theme"), "w") as f:
-        f.write(rgb_str)
-        
-    if os.path.exists(current_theme_dir):
-        with open(os.path.join(current_theme_dir, "chromium.theme"), "w") as f:
-            f.write(rgb_str)
-
-    # 2. Update colors.toml (Foreground matches wallpaper accent color with boosted luminous brightness)
+    
+    # 2. Update colors.toml (Foreground matching wallpaper color with high luminance)
     colors_toml = f"""accent = "{primary['hex']}"
 cursor = "{secondary['hex']}"
 foreground = "{primary['hex']}"
@@ -151,14 +148,111 @@ color13 = "{secondary['hex']}"
 color14 = "#67e8f9"
 color15 = "#ffffff"
 """
-    with open(os.path.join(theme_dir, "colors.toml"), "w") as f:
-        f.write(colors_toml)
-        
-    if os.path.exists(current_theme_dir):
-        with open(os.path.join(current_theme_dir, "colors.toml"), "w") as f:
-            f.write(colors_toml)
 
-    # 3. Update hyprland.lua & looknfeel.lua
+    # 3. Update foot.ini
+    foot_ini = f"""[colors-dark]
+foreground={p_hex_clean}
+background=090d16
+selection-foreground=090d16
+selection-background={p_hex_clean}
+
+cursor=090d16 {s_hex_clean}
+
+regular0=090d16
+regular1=ef4444
+regular2=10b981
+regular3=f59e0b
+regular4={p_hex_clean}
+regular5={s_hex_clean}
+regular6=06b6d4
+regular7={p_hex_clean}
+
+bright0=334155
+bright1=f87171
+bright2=34d399
+bright3=fbbf24
+bright4={p_hex_clean}
+bright5={s_hex_clean}
+bright6=67e8f9
+bright7=ffffff
+"""
+
+    # 4. Update alacritty.toml
+    alacritty_toml = f"""[colors.primary]
+background = "#090d16"
+foreground = "{primary['hex']}"
+
+[colors.cursor]
+text = "#090d16"
+cursor = "{secondary['hex']}"
+
+[colors.selection]
+text = "#090d16"
+background = "{primary['hex']}"
+
+[colors.normal]
+black = "#090d16"
+red = "#ef4444"
+green = "#10b981"
+yellow = "#f59e0b"
+blue = "{primary['hex']}"
+magenta = "{secondary['hex']}"
+cyan = "#06b6d4"
+white = "{primary['hex']}"
+
+[colors.bright]
+black = "#334155"
+red = "#f87171"
+green = "#34d399"
+yellow = "#fbbf24"
+blue = "{primary['hex']}"
+magenta = "{secondary['hex']}"
+cyan = "#67e8f9"
+white = "#ffffff"
+"""
+
+    # 5. Update kitty.conf
+    kitty_conf = f"""foreground {primary['hex']}
+background #090d16
+selection_foreground #090d16
+selection_background {primary['hex']}
+cursor {secondary['hex']}
+cursor_text_color #090d16
+
+color0 #090d16
+color1 #ef4444
+color2 #10b981
+color3 #f59e0b
+color4 {primary['hex']}
+color5 {secondary['hex']}
+color6 #06b6d4
+color7 {primary['hex']}
+
+color8 #334155
+color9 #f87171
+color10 #34d399
+color11 #fbbf24
+color12 {primary['hex']}
+color13 {secondary['hex']}
+color14 #67e8f9
+color15 #ffffff
+"""
+
+    # Write all config templates across directories
+    for d in theme_dirs:
+        if os.path.exists(d):
+            with open(os.path.join(d, "chromium.theme"), "w") as f:
+                f.write(rgb_str)
+            with open(os.path.join(d, "colors.toml"), "w") as f:
+                f.write(colors_toml)
+            with open(os.path.join(d, "foot.ini"), "w") as f:
+                f.write(foot_ini)
+            with open(os.path.join(d, "alacritty.toml"), "w") as f:
+                f.write(alacritty_toml)
+            with open(os.path.join(d, "kitty.conf"), "w") as f:
+                f.write(kitty_conf)
+
+    # 6. Update hyprland.lua & looknfeel.lua
     hypr_lua = f"""-- Shinsekai Dynamic Anime Theme for Hyprland
 local active_border_color = {{ colors = {{ "rgba({primary['r']:02x}{primary['g']:02x}{primary['b']:02x}ee)", "rgba({secondary['r']:02x}{secondary['g']:02x}{secondary['b']:02x}ee)" }}, angle = 45 }}
 local inactive_border_color = "rgba(0f172a66)"
@@ -221,6 +315,7 @@ hl.config({{
   }},
 }})
 """
+    theme_dir = os.path.expanduser("~/.config/omarchy/themes/shinsekai")
     with open(os.path.join(theme_dir, "hyprland.lua"), "w") as f:
         f.write(hypr_lua)
         
@@ -228,18 +323,15 @@ hl.config({{
     with open(looknfeel_path, "w") as f:
         f.write(hypr_lua)
 
-    # 4. Instant Browser Policy Update & Live Refresh
+    # 7. Instant live browser & terminal updates
     subprocess.run("omarchy-theme-set-browser >/dev/null 2>&1", shell=True)
     subprocess.run("brave --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
     subprocess.run("chromium --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
-
-    # 5. Render templates & live-retint open terminals
-    subprocess.run("omarchy-theme-set-templates >/dev/null 2>&1", shell=True)
-    subprocess.run("omarchy-theme-set-hyprland >/dev/null 2>&1", shell=True)
+    subprocess.run("omarchy-theme-set-foot >/dev/null 2>&1", shell=True)
     subprocess.run("omarchy-restart-terminal >/dev/null 2>&1", shell=True)
     subprocess.run("hyprctl reload >/dev/null 2>&1", shell=True)
     
-    print(f"[Shinsekai Dynamic] Theme matched to wallpaper: {os.path.basename(image_path)} -> Foreground/Accent: {primary['hex']} | Glow: {secondary['hex']}", flush=True)
+    print(f"[Shinsekai Dynamic] Terminal & UI text matched to wallpaper: {os.path.basename(image_path)} -> Foreground: {primary['hex']} | Glow: {secondary['hex']}", flush=True)
 
 if __name__ == "__main__":
     img = sys.argv[1] if len(sys.argv) > 1 else None
