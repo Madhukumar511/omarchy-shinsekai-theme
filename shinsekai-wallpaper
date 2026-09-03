@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-import sys, os, subprocess, urllib.request, urllib.parse, re, shutil, shlex
+import sys, os, subprocess, urllib.request, urllib.parse, re, shutil, shlex, time, json
 
 THEME_DIR = os.path.expanduser("~/.config/omarchy/themes/shinsekai")
 BG_DIR = os.path.join(THEME_DIR, "backgrounds")
+TRASH_DIR = os.path.join(THEME_DIR, ".trash")
 DYNAMIC_SCRIPT = os.path.join(THEME_DIR, "dynamic-theme.py")
+TRASH_HISTORY_FILE = os.path.join(TRASH_DIR, "history.json")
 
 def print_banner():
     print("""
 \033[1;36m🌸 Shinsekai Wallpaper Manager\033[0m
-\033[2mInstant 4K/8K anime wallpaper downloader & real-time dynamic color sync.\033[0m
+\033[2mInstant 4K/8K anime wallpaper downloader, trash recovery & zero-CPU dynamic color sync.\033[0m
 """)
 
 def print_commands_menu():
@@ -16,7 +18,9 @@ def print_commands_menu():
   \033[1;32madd <url-or-path> [name]\033[0m   Download & add 4K wallpaper (auto-assigned next number)
   \033[1;32mlist\033[0m                      View all wallpapers with their assigned numbers [01-12]
   \033[1;32mset <number>\033[0m              Switch active wallpaper by number (e.g. \033[36mset 4\033[0m)
-  \033[1;32mremove <number>\033[0m           Delete wallpaper by number (e.g. \033[36mremove 13\033[0m)
+  \033[1;32mremove <number>\033[0m           Delete wallpaper to trash (e.g. \033[36mremove 12\033[0m)
+  \033[1;32mrestore [number]\033[0m          Undo / Restore deleted wallpaper (e.g. \033[36mrestore 12\033[0m or \033[36mundo\033[0m)
+  \033[1;32mtrash\033[0m                     View deleted wallpapers in recovery trash
   \033[1;32mnext\033[0m                      Cycle to next wallpaper
   \033[1;32mcurrent\033[0m                   Show currently active wallpaper
   \033[1;32mexit\033[0m                      Exit manager
@@ -51,7 +55,6 @@ def resolve_smart_url(url):
         try:
             req = urllib.request.Request(api_url, headers={'User-Agent': 'Mozilla/5.0'})
             with urllib.request.urlopen(req, timeout=5) as resp:
-                import json
                 data = json.loads(resp.read().decode('utf-8'))
                 direct_path = data['data']['path']
                 print(f"\033[1;33m🔍 Resolved full Wallhaven 4K/8K path:\033[0m {direct_path}")
@@ -90,12 +93,25 @@ def get_all_wallpapers():
         return []
     return sorted([f for f in os.listdir(BG_DIR) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))])
 
+def load_trash_history():
+    if os.path.exists(TRASH_HISTORY_FILE):
+        try:
+            with open(TRASH_HISTORY_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return []
+
+def save_trash_history(history):
+    os.makedirs(TRASH_DIR, exist_ok=True)
+    with open(TRASH_HISTORY_FILE, "w") as f:
+        json.dump(history, f, indent=2)
+
 def add_wallpaper(source, custom_name=None):
     if not source:
         print("\033[1;31m❌ Error: Please provide an image URL or local file path.\033[0m")
         return
 
-    # Clean any accidental command wrappers pasted by user (e.g. shin-bg add "...")
     source = re.sub(r'^(shin-bg|shinsekai-wallpaper|shinsekai)\s+(add\s+)?', '', source).strip().strip("'\"")
 
     os.makedirs(BG_DIR, exist_ok=True)
@@ -106,7 +122,6 @@ def add_wallpaper(source, custom_name=None):
 
     clean_source = resolve_smart_url(source)
 
-    # 1. Download or Copy
     if clean_source.startswith("http://") or clean_source.startswith("https://"):
         print(f"\033[1;34m⬇️ Downloading wallpaper:\033[0m {clean_source}")
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
@@ -124,7 +139,6 @@ def add_wallpaper(source, custom_name=None):
             return
         shutil.copy2(src_path, temp_file)
 
-    # 2. Quality & Resolution Check
     w, h, fmt, size = get_image_info(temp_file)
     if w == 0 or h == 0:
         print("\033[1;31m❌ Invalid or unreadable image file.\033[0m")
@@ -141,7 +155,6 @@ def add_wallpaper(source, custom_name=None):
     else:
         print(f"\033[1;31m⚠️ Low Resolution ({w}x{h}):\033[0m Upscaling to 4K canvas.")
 
-    # 3. Automatically assign next sequential number
     existing_files = get_all_wallpapers()
     next_idx = len(existing_files) + 1
 
@@ -158,7 +171,6 @@ def add_wallpaper(source, custom_name=None):
 
     dest_path = os.path.join(BG_DIR, target_filename)
 
-    # 4. Process and save
     print("\033[1;34m⚙️ Processing & saving 4K UHD wallpaper...\033[0m")
     subprocess.run(f'magick "{temp_file}" -resize 3840x2160^ -gravity center -extent 3840x2160 -quality 95 "{dest_path}"', shell=True)
     if os.path.exists(temp_file):
@@ -167,7 +179,6 @@ def add_wallpaper(source, custom_name=None):
 
     print(f"\033[1;32m🎉 Added Wallpaper #{next_idx:02d}:\033[0m {target_filename} ({os.path.getsize(dest_path)} bytes)")
 
-    # 5. Set active & trigger dynamic color adaptation
     subprocess.run(f'omarchy theme bg set "{dest_path}"', shell=True)
     if os.path.exists(DYNAMIC_SCRIPT):
         subprocess.run(f'python3 "{DYNAMIC_SCRIPT}" "{dest_path}"', shell=True)
@@ -197,7 +208,6 @@ def remove_wallpaper(target):
     target_str = str(target).strip()
     if target_str.isdigit():
         target_num = int(target_str)
-        # Check prefix match first (e.g. 13 -> 13-*.jpg)
         for f in files:
             if f.startswith(f"{target_num:02d}-"):
                 to_delete = f
@@ -214,10 +224,84 @@ def remove_wallpaper(target):
         print(f"\033[1;31m❌ Wallpaper #{target} not found. Run 'list' to view numbers.\033[0m")
         return
 
-    del_path = os.path.join(BG_DIR, to_delete)
-    os.remove(del_path)
-    print(f"\033[1;32m🗑️ Removed wallpaper:\033[0m {to_delete}")
+    # Move to trash instead of permanent delete (Trash Recovery System)
+    os.makedirs(TRASH_DIR, exist_ok=True)
+    src_path = os.path.join(BG_DIR, to_delete)
+    trash_path = os.path.join(TRASH_DIR, to_delete)
+    shutil.move(src_path, trash_path)
+
+    history = load_trash_history()
+    history.append({
+        "filename": to_delete,
+        "deleted_at": time.time()
+    })
+    save_trash_history(history)
+
+    print(f"\033[1;32m🗑️ Moved to recovery trash:\033[0m {to_delete}")
+    print(f"\033[2m💡 Mistake? Type \033[1;36mshin-bg restore {to_delete[:2]}\033[0m\033[2m or \033[1;36mshin-bg undo\033[0m\033[2m anytime to restore it!\033[0m")
     subprocess.run("omarchy theme bg next 2>/dev/null || true", shell=True)
+
+def restore_wallpaper(target=None):
+    """Restores deleted wallpaper from recovery trash."""
+    history = load_trash_history()
+    if not history:
+        print("\033[1;33mℹ️ Recovery trash is empty. No deleted wallpapers to restore.\033[0m")
+        return
+
+    to_restore_entry = None
+    target_str = str(target).strip() if target else ""
+
+    if target_str:
+        if target_str.isdigit():
+            target_num = int(target_str)
+            for item in reversed(history):
+                if item["filename"].startswith(f"{target_num:02d}-"):
+                    to_restore_entry = item
+                    break
+        else:
+            for item in reversed(history):
+                if target_str.lower() in item["filename"].lower():
+                    to_restore_entry = item
+                    break
+    else:
+        # Restore most recent
+        to_restore_entry = history[-1]
+
+    if not to_restore_entry:
+        print(f"\033[1;31m❌ Wallpaper #{target} not found in recovery trash. Type 'trash' to view deleted files.\033[0m")
+        return
+
+    filename = to_restore_entry["filename"]
+    trash_path = os.path.join(TRASH_DIR, filename)
+    dest_path = os.path.join(BG_DIR, filename)
+
+    if not os.path.exists(trash_path):
+        print(f"\033[1;31m❌ File not found in trash: {filename}\033[0m")
+        return
+
+    shutil.move(trash_path, dest_path)
+    history = [h for h in history if h["filename"] != filename]
+    save_trash_history(history)
+
+    print(f"\033[1;32m🎉 Restored Wallpaper:\033[0m {filename}")
+    subprocess.run(f'omarchy theme bg set "{dest_path}"', shell=True)
+    if os.path.exists(DYNAMIC_SCRIPT):
+        subprocess.run(f'python3 "{DYNAMIC_SCRIPT}" "{dest_path}"', shell=True)
+    print("\033[1;35m✨ Active wallpaper set and colors dynamically updated!\033[0m")
+
+def list_trash():
+    history = load_trash_history()
+    if not history:
+        print("\033[1;33mℹ️ Recovery trash is empty.\033[0m")
+        return
+
+    print(f"\n\033[1;36m🗑️ Recovery Trash ({len(history)} items):\033[0m\n")
+    for idx, item in enumerate(history, 1):
+        fn = item["filename"]
+        ago = int((time.time() - item.get("deleted_at", time.time())) / 60)
+        ago_str = f"{ago}m ago" if ago > 0 else "just now"
+        print(f"  \033[1;33m[{fn[:2]}]\033[0m {fn:<38} \033[2m(Deleted {ago_str})\033[0m")
+    print(f"\n\033[2mRun \033[1;36mshin-bg restore <number>\033[0m\033[2m to restore any item.\033[0m\n")
 
 def set_wallpaper(target):
     files = get_all_wallpapers()
@@ -226,7 +310,6 @@ def set_wallpaper(target):
     target_str = str(target).strip()
     if target_str.isdigit():
         target_num = int(target_str)
-        # Match by prefix (e.g. 02 -> 02-*.png)
         for f in files:
             if f.startswith(f"{target_num:02d}-"):
                 chosen = f
@@ -247,7 +330,7 @@ def set_wallpaper(target):
     subprocess.run(f'omarchy theme bg set "{p}"', shell=True)
     if os.path.exists(DYNAMIC_SCRIPT):
         subprocess.run(f'python3 "{DYNAMIC_SCRIPT}" "{p}"', shell=True)
-    print(f"\033[1;32m✨ Active wallpaper set to:\033[0m {chosen}")
+    print(f"\033[1;32m✨ Active wallpaper set to [{chosen[:2]}]:\033[0m {chosen}")
 
 def parse_and_execute(cmd_line):
     cmd_line = cmd_line.strip()
@@ -262,7 +345,6 @@ def parse_and_execute(cmd_line):
     if not parts:
         return
 
-    # Strip executable name if user typed it (e.g. shin-bg or shinsekai-wallpaper)
     if parts[0] in ["shin-bg", "shinsekai-wallpaper", "shinsekai"]:
         parts = parts[1:]
         if not parts:
@@ -290,22 +372,25 @@ def parse_and_execute(cmd_line):
         if not target:
             target = input("\033[1;36mEnter Wallpaper Number to Remove: \033[0m").strip()
         remove_wallpaper(target)
-    elif action in ["next", "cycle", "5"]:
+    elif action in ["restore", "undo", "redo", "recover", "5"]:
+        target = parts[1] if len(parts) > 1 else None
+        restore_wallpaper(target)
+    elif action in ["trash", "bin", "history", "6"]:
+        list_trash()
+    elif action in ["next", "cycle", "7"]:
         subprocess.run("omarchy theme bg next", shell=True)
     elif action in ["current", "status"]:
         subprocess.run("omarchy theme bg current", shell=True)
-    elif action in ["exit", "quit", "q", "6"]:
+    elif action in ["exit", "quit", "q", "8"]:
         print("Exiting.")
         sys.exit(0)
     elif action.isdigit():
-        # If user just typed a number like '3', switch to that wallpaper!
         set_wallpaper(action)
     elif action.startswith("http://") or action.startswith("https://") or os.path.exists(os.path.expanduser(action)):
-        # If user directly pasted a URL/path
         name = parts[1] if len(parts) > 1 else None
         add_wallpaper(action, name)
     else:
-        print(f"\033[1;31mUnknown command '{action}'. Type 'list', 'set <number>', 'add <url>', or 'remove <number>'.\033[0m")
+        print(f"\033[1;31mUnknown command '{action}'. Type 'list', 'set <number>', 'add <url>', 'remove <number>', or 'restore <number>'.\033[0m")
 
 def interactive_loop():
     print_banner()
