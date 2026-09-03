@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
-import subprocess, re, os, colorsys, sys
+import subprocess, re, os, colorsys, sys, base64
 
 def get_current_background():
     bg_link = os.path.expanduser("~/.local/state/omarchy/current/background")
     if os.path.exists(bg_link):
         return os.path.realpath(bg_link)
-    # Default to first wallpaper
     return os.path.expanduser("~/.config/omarchy/themes/shinsekai/backgrounds/01-asuna-meadow-nature.png")
 
 def extract_vibrant_colors(image_path):
-    # Quantize image and get color histogram
     cmd = f'magick "{image_path}" -resize 120x120! -colors 16 -format "%c" histogram:info:'
     res = subprocess.run(cmd, shell=True, capture_output=True, text=True).stdout
     
@@ -21,7 +19,6 @@ def extract_vibrant_colors(image_path):
             hex_col = '#' + match.group(1).lower()
             count = int(count_match.group(1))
             
-            # Convert to HSV to evaluate saturation and lightness
             r = int(hex_col[1:3], 16) / 255.0
             g = int(hex_col[3:5], 16) / 255.0
             b = int(hex_col[5:7], 16) / 255.0
@@ -36,16 +33,13 @@ def extract_vibrant_colors(image_path):
                 'h': h,
                 's': s,
                 'v': v,
-                # Score based on saturation, brightness balance and frequency
                 'vibrancy': s * (1.0 - abs(v - 0.65)) * 2.0 + (0.1 if s > 0.3 else 0.0)
             })
             
-    # Sort by vibrancy for accents
     vibrant_sorted = sorted(parsed, key=lambda x: x['vibrancy'], reverse=True)
     
     if len(vibrant_sorted) >= 2:
         primary = vibrant_sorted[0]
-        # Find secondary with distinct hue
         secondary = None
         for c in vibrant_sorted[1:]:
             if abs(c['h'] - primary['h']) > 0.15:
@@ -70,7 +64,7 @@ def apply_dynamic_theme(image_path=None):
     
     theme_dir = os.path.expanduser("~/.config/omarchy/themes/shinsekai")
     
-    # 1. Update chromium.theme (R,G,B format for Brave/Chromium)
+    # 1. Update chromium.theme
     with open(os.path.join(theme_dir, "chromium.theme"), "w") as f:
         f.write(f"{primary['r']},{primary['g']},{primary['b']}\n")
         
@@ -106,7 +100,13 @@ color15 = "#ffffff"
     with open(os.path.join(theme_dir, "colors.toml"), "w") as f:
         f.write(colors_toml)
         
-    # 3. Update hyprland.lua & looknfeel.lua for instantaneous border color match
+    # Also update the staged current theme colors if present
+    current_theme_colors = os.path.expanduser("~/.local/state/omarchy/current/theme/colors.toml")
+    if os.path.exists(current_theme_colors):
+        with open(current_theme_colors, "w") as f:
+            f.write(colors_toml)
+
+    # 3. Update hyprland.lua & looknfeel.lua
     hypr_lua = f"""-- Shinsekai Dynamic Anime Theme for Hyprland
 local active_border_color = {{ colors = {{ "rgba({primary['r']:02x}{primary['g']:02x}{primary['b']:02x}ee)", "rgba({secondary['r']:02x}{secondary['g']:02x}{secondary['b']:02x}ee)" }}, angle = 45 }}
 local inactive_border_color = "rgba(0f172a66)"
@@ -175,10 +175,24 @@ hl.config({{
     looknfeel_path = os.path.expanduser("~/.config/hypr/looknfeel.lua")
     with open(looknfeel_path, "w") as f:
         f.write(hypr_lua)
-        
-    # Reload hyprland
+
+    # 4. Trigger Omarchy full system & shell theme refresh
+    # This automatically updates Top Bar (QuickShell), Walker launcher, Mako notifications,
+    # SwayOSD overlays, Brave/Chromium, GTK apps, open terminals, Btop, and VSCode!
+    env = os.environ.copy()
+    env["OMARCHY_THEME_SKIP_BACKGROUND"] = "1"
+    subprocess.run("omarchy-theme-set-templates 2>/dev/null", shell=True, env=env)
+    subprocess.run("omarchy-theme-set-browser 2>/dev/null", shell=True, env=env)
+    subprocess.run("omarchy-theme-set-gnome 2>/dev/null", shell=True, env=env)
+    subprocess.run("omarchy-restart-terminal 2>/dev/null", shell=True, env=env)
+    subprocess.run("omarchy-restart-btop 2>/dev/null", shell=True, env=env)
     subprocess.run("hyprctl reload 2>&1 >/dev/null", shell=True)
-    print(f"Dynamic theme applied for: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}")
+    
+    # Update running omarchy-shell bar via IPC
+    colors_b64 = base64.b64encode(colors_toml.encode('utf-8')).decode('utf-8')
+    subprocess.run(f"omarchy-shell -q shell applyTheme '{colors_b64}' '' 2>/dev/null", shell=True)
+    
+    print(f"Full system dynamic theme applied for: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
 
 if __name__ == "__main__":
     img = sys.argv[1] if len(sys.argv) > 1 else None
