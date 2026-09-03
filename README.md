@@ -1,8 +1,8 @@
-# Shinsekai (新世界) — Scenery-First Anime Aesthetic Theme for Omarchy
+# Shinsekai (新世界) — Dynamic Scenery-First Anime Aesthetic Theme for Omarchy
 
 > **Shinsekai** *(新世界)* — The Japanese concept for *New Worlds*.
 
-An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curated 4K & 8K scenery-first environmental landscape wallpapers** from iconic anime universes, paired with a luminous OLED-optimized color palette, clean glowing Celestial Azure / Cyan anime gradient borders, and smooth physics animations.
+An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curated 4K & 8K scenery-first environmental landscape wallpapers** from iconic anime universes with **Automatic Dynamic Color Adaptation** — the entire theme palette, window borders, and browser accents dynamically adapt in real-time to match whichever wallpaper you select!
 
 ---
 
@@ -34,36 +34,18 @@ An anime-inspired theme crafted for **Omarchy | Hyprland**, featuring **12 curat
 
 ---
 
-## Features & Visual Design
+## Features & Dynamic Visual Design
 
-- **12 Curated 4K & 8K Environmental Masterpieces:**
-  - Scenery-first anime landscapes where character and vast world naturally harmonize.
-- **Celestial Azure Anime Gradient Borders:**
-  - Active window borders feature an elegant 45° glowing gradient:
-    - *Celestial Azure* (`#38bdf8`) ↔ *Royal Indigo* (`#818cf8`) ↔ *Electric Aqua* (`#00e5ff`)
-- **Subtle Depth & Glassmorphism:**
+- **Real-Time Dynamic Color Adaptation**:
+  - Whenever you change wallpaper (`SUPER + CTRL + SPACE` or `omarchy theme bg next`), the theme automatically extracts the dominant vibrant accents from the image and updates window borders, UI accents, and browser themes in real-time.
+- **Glowing Anime Gradient Borders**:
+  - Active window borders feature an auto-tuned 45° glowing gradient matching the active background.
+- **Subtle Depth & Glassmorphism**:
   - Clean velvet shadow depth (`rgba(0,0,0,0.5)`) with multi-pass frosted acrylic glass blur.
-- **Silky Smooth Ease-Out Animations:**
+- **Silky Smooth Ease-Out Animations**:
   - Fast, responsive cubic-bezier transitions (`shinsekaiEase`) for window popins and workspace sliding.
-- **Luminous OLED-Optimized Color Palette:**
-  - Deep velvet void canvas (`#090d16`) with high-contrast starlight white text (`#f8fafc`).
-- **Complete Suite of Companion App Themes:**
-  - `btop.theme`, `fastfetch.jsonc`, `starship.toml`, `alacritty.toml`, `kitty.conf`, `gtk.css`, `mako.ini` (notifications), `walker.css` (app launcher), `hyprlock.conf` (lockscreen), `obsidian.css`, `vencord.theme.css` (Discord), `zed.json`, `vscode.json`, `neovim.lua`, and `icons.theme` (Papirus-Dark) included.
-
----
-
-## Color Palette Reference
-
-| Color | Hex | Role |
-| :--- | :--- | :--- |
-| **Background** | `#090d16` | Deep void night canvas |
-| **Foreground** | `#f8fafc` | Crisp starlight mist white |
-| **Accent Primary** | `#38bdf8` | Celestial Azure Blue |
-| **Accent Secondary** | `#00e5ff` | Electric Aqua Cyan |
-| **Indigo** | `#818cf8` | Royal Anime Indigo |
-| **Green** | `#10b981` | Lake Emerald |
-| **Yellow** | `#f59e0b` | Solar Flare Gold |
-| **Red** | `#ef4444` | Crimson Flame |
+- **Complete Suite of Companion App Themes**:
+  - `btop.theme`, `fastfetch.jsonc`, `starship.toml`, `alacritty.toml`, `kitty.conf`, `gtk.css`, `mako.ini` (notifications), `walker.css` (app launcher), `hyprlock.conf` (lockscreen), `obsidian.css`, `vencord.theme.css` (Discord), `zed.json`, `vscode.json`, `neovim.lua`, and `icons.theme` (Yaru-blue-dark) included.
 
 ---
 
@@ -106,7 +88,7 @@ Cycle between all 12 anime scenery wallpapers anytime via terminal:
 omarchy theme bg next
 ```
 
-Or press `SUPER + CTRL + SPACE` to open the visual thumbnail switcher.
+Or press `SUPER + CTRL + SPACE` to open the visual thumbnail switcher. The color palette will automatically adapt to each wallpaper.
 
 ---
 

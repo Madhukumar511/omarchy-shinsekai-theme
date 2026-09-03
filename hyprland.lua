@@ -1,6 +1,5 @@
--- Shinsekai (新世界) Anime Theme for Hyprland
--- Celestial Azure -> Royal Indigo -> Electric Aqua gradient (NO PINK)
-local active_border_color = { colors = { "rgba(38bdf8ee)", "rgba(818cf8ee)", "rgba(00e5ffee)" }, angle = 45 }
+-- Shinsekai Dynamic Anime Theme for Hyprland
+local active_border_color = { colors = { "rgba(af4f5cee)", "rgba(0b293bee)" }, angle = 45 }
 local inactive_border_color = "rgba(0f172a66)"
 
 hl.config({
