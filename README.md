@@ -25,7 +25,7 @@
 - [Wallpaper Gallery (12 Masterpieces)](#wallpaper-gallery-12-masterpieces)
 - [How Dynamic Theming Works](#how-dynamic-theming-works)
 - [Luminance & Readability Guard](#luminance--readability-guard)
-- [Installation Guide](#installation-guide)
+- [Terminal Download & Installation Guide](#terminal-download--installation-guide)
 - [Keyboard Shortcuts](#keyboard-shortcuts)
 - [Included App Styles](#included-app-styles)
 - [Project File Structure](#project-file-structure)
@@ -111,17 +111,21 @@ To prevent dark or muted backgrounds from making terminal text and syntax highli
 
 ---
 
-## Installation Guide
+## Terminal Download & Installation Guide
 
-### Option A: Terminal Installation (Recommended)
+### Method 1: Automated Installer (Fastest)
+
+Run the one-line installer in your terminal:
 
 ```bash
-# 1. Install theme
 omarchy theme install https://github.com/Madhukumar511/omarchy-shinsekai-theme.git
+```
 
-# 2. Enable real-time dynamic background color service
+Then enable the background color sync daemon:
+
+```bash
 mkdir -p ~/.config/systemd/user
-cat << 'SERVICE_EOF' > ~/.config/systemd/user/shinsekai-dynamic.service
+cat << 'EOF' > ~/.config/systemd/user/shinsekai-dynamic.service
 [Unit]
 Description=Shinsekai Theme Dynamic Wallpaper Color Sync
 After=graphical-session.target
@@ -134,18 +138,76 @@ RestartSec=1
 
 [Install]
 WantedBy=default.target
-SERVICE_EOF
+EOF
 
 systemctl --user daemon-reload
 systemctl --user enable --now shinsekai-dynamic.service
 ```
 
-### Option B: Walker GUI Menu
+---
 
-1. Copy the repo URL: `https://github.com/Madhukumar511/omarchy-shinsekai-theme.git`
-2. Open Walker / Omarchy menu (`SUPER + ALT + SPACE` or `SUPER + SPACE`).
-3. Navigate to: **Install > Style > Theme**.
+### Method 2: Manual Git Clone (Step-by-Step)
+
+If you prefer cloning and setting up manually:
+
+```bash
+# 1. Clone repository to Omarchy themes directory
+git clone https://github.com/Madhukumar511/omarchy-shinsekai-theme.git ~/.config/omarchy/themes/shinsekai
+
+# 2. Activate theme in Omarchy
+omarchy theme set shinsekai
+
+# 3. Enable real-time dynamic background color service
+mkdir -p ~/.config/systemd/user
+cat << 'EOF' > ~/.config/systemd/user/shinsekai-dynamic.service
+[Unit]
+Description=Shinsekai Theme Dynamic Wallpaper Color Sync
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/.config/omarchy/themes/shinsekai/shinsekai-watcher.py
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=default.target
+EOF
+
+systemctl --user daemon-reload
+systemctl --user enable --now shinsekai-dynamic.service
+
+# 4. Reload Hyprland
+hyprctl reload
+```
+
+---
+
+### Method 3: Walker GUI Menu
+
+1. Copy the repository URL: `https://github.com/Madhukumar511/omarchy-shinsekai-theme.git`
+2. Open Walker launcher (`SUPER + ALT + SPACE` or `SUPER + SPACE`).
+3. Navigate: **Install > Style > Theme**.
 4. Paste the URL and press **Enter**.
+
+---
+
+## Verifying & Switching Wallpapers
+
+After installation, cycle through wallpapers and watch your entire desktop dynamically adapt in real-time:
+
+```bash
+# Cycle to next wallpaper
+omarchy theme bg next
+
+# Cycle to previous wallpaper
+omarchy theme bg prev
+
+# Check active wallpaper name
+omarchy theme bg current
+```
+
+Or press **`SUPER + CTRL + SPACE`** on your keyboard to open the visual thumbnail picker.
 
 ---
 
