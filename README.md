@@ -6,13 +6,14 @@
 
 <p align="center">
   <strong>新世界 (Shinsekai) — <em>"New Worlds"</em></strong><br>
-  A curated anime visual theme for <strong>Omarchy Linux & Hyprland</strong> featuring <strong>12 iconic 4K & 8K anime landscapes, celestial skies, and character art</strong> with <strong>Real-Time Dynamic Color Adaptation</strong>.
+  A curated anime visual theme for <strong>Omarchy Linux & Hyprland</strong> featuring <strong>12 iconic 4K & 8K anime landscapes, celestial skies, and character art</strong> with <strong>Real-Time Dynamic Color Adaptation</strong> and a built-in <strong>CLI Wallpaper Manager</strong>.
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Platform-Omarchy%20%7C%20Hyprland-blue?style=for-the-badge&logo=archlinux" alt="Platform">
   <img src="https://img.shields.io/badge/Wallpapers-12%20Curated%204K%2F8K-purple?style=for-the-badge" alt="Wallpapers">
   <img src="https://img.shields.io/badge/Theming-Real--Time%20Dynamic%20Sync-green?style=for-the-badge" alt="Dynamic Theming">
+  <img src="https://img.shields.io/badge/CLI%20Tool-Wallpaper%20Manager-magenta?style=for-the-badge" alt="CLI Tool">
   <img src="https://img.shields.io/badge/License-MIT-orange?style=for-the-badge" alt="License">
 </p>
 
@@ -23,6 +24,7 @@
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [Wallpaper Gallery (12 Masterpieces)](#wallpaper-gallery-12-masterpieces)
+- [Wallpaper Manager CLI (`shinsekai-wallpaper`)](#wallpaper-manager-cli-shinsekai-wallpaper)
 - [How Dynamic Theming Works](#how-dynamic-theming-works)
 - [Luminance & Readability Guard](#luminance--readability-guard)
 - [Terminal Download & Installation Guide](#terminal-download--installation-guide)
@@ -49,6 +51,8 @@ Powered by a custom **Hue-Clustered Dynamic Color Engine**, your entire system�
   - Automatically extracts dominant color palettes and gradient pairs on wallpaper change.
   - Live reloads Hyprland window borders in a single frame.
   - Updates Brave/Chromium browser theme, top bar (Omarchy QuickShell), Walker launcher, and GTK apps instantly.
+- **CLI Wallpaper Manager & Quality Checker**:
+  - Built-in `shinsekai-wallpaper` CLI to download, quality-check (4K/8K resolution guard), optimize, and manage custom wallpapers directly from terminal.
 - **Luminance & Contrast Guard**:
   - Enforces minimum brightness (`v >= 0.88`) on all dynamically extracted accent colors.
   - Guarantees 100% crisp terminal text readability and WCAG contrast even on dark or muted backgrounds.
@@ -91,6 +95,41 @@ Powered by a custom **Hue-Clustered Dynamic Color Engine**, your entire system�
 
 ---
 
+## Wallpaper Manager CLI (`shinsekai-wallpaper`)
+
+Shinsekai includes a custom terminal tool to add, download, inspect, and manage wallpapers with automatic quality inspection and dynamic palette adaptation.
+
+### Download & Add a Wallpaper from URL
+
+Find an image link on Google, Wallhaven, or AlphaCoders and add it directly:
+
+```bash
+# Add from web URL with a custom name
+shinsekai-wallpaper add "https://w.wallhaven.cc/full/z8/wallhaven-z8opey.jpg" "saber-avalon"
+
+# Or add from a local downloaded file
+shinsekai-wallpaper add ~/Downloads/anime_wallpaper.png "my-custom-art"
+```
+
+The CLI automatically:
+1. Validates the resolution (checks for native **4K/8K** or **2K/1080p**).
+2. Sharpens and scales the image into clean 4K UHD format (quality 95).
+3. Adds it to the theme gallery.
+4. Immediately adapts your entire system color scheme to match the new image.
+
+### CLI Commands Cheat Sheet
+
+| Command | Action |
+| :--- | :--- |
+| `shinsekai-wallpaper list` | List all installed wallpapers with resolutions & file sizes |
+| `shinsekai-wallpaper add <url-or-path> [name]` | Download or import a wallpaper with 4K quality check |
+| `shinsekai-wallpaper set <number-or-name>` | Set specific wallpaper as active |
+| `shinsekai-wallpaper remove <number-or-name>` | Delete a wallpaper from theme |
+| `shinsekai-wallpaper next` | Cycle to next wallpaper |
+| `shinsekai-wallpaper current` | Show currently active wallpaper |
+
+---
+
 ## How Dynamic Theming Works
 
 1. **Background Detection**: A background service (`shinsekai-watcher.py`) monitors wallpaper symlink changes with zero CPU overhead.
@@ -121,10 +160,12 @@ Run the one-line installer in your terminal:
 omarchy theme install https://github.com/Madhukumar511/omarchy-shinsekai-theme.git
 ```
 
-Then enable the background color sync daemon:
+Then enable the background color sync daemon and CLI tool:
 
 ```bash
-mkdir -p ~/.config/systemd/user
+mkdir -p ~/.config/systemd/user ~/.local/bin
+ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shinsekai-wallpaper
+
 cat << 'EOF' > ~/.config/systemd/user/shinsekai-dynamic.service
 [Unit]
 Description=Shinsekai Theme Dynamic Wallpaper Color Sync
@@ -157,7 +198,11 @@ git clone https://github.com/Madhukumar511/omarchy-shinsekai-theme.git ~/.config
 # 2. Activate theme in Omarchy
 omarchy theme set shinsekai
 
-# 3. Enable real-time dynamic background color service
+# 3. Setup Wallpaper Manager CLI
+mkdir -p ~/.local/bin
+ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shinsekai-wallpaper
+
+# 4. Enable real-time dynamic background color service
 mkdir -p ~/.config/systemd/user
 cat << 'EOF' > ~/.config/systemd/user/shinsekai-dynamic.service
 [Unit]
@@ -177,18 +222,9 @@ EOF
 systemctl --user daemon-reload
 systemctl --user enable --now shinsekai-dynamic.service
 
-# 4. Reload Hyprland
+# 5. Reload Hyprland
 hyprctl reload
 ```
-
----
-
-### Method 3: Walker GUI Menu
-
-1. Copy the repository URL: `https://github.com/Madhukumar511/omarchy-shinsekai-theme.git`
-2. Open Walker launcher (`SUPER + ALT + SPACE` or `SUPER + SPACE`).
-3. Navigate: **Install > Style > Theme**.
-4. Paste the URL and press **Enter**.
 
 ---
 
@@ -198,13 +234,10 @@ After installation, cycle through wallpapers and watch your entire desktop dynam
 
 ```bash
 # Cycle to next wallpaper
-omarchy theme bg next
+shinsekai-wallpaper next
 
-# Cycle to previous wallpaper
-omarchy theme bg prev
-
-# Check active wallpaper name
-omarchy theme bg current
+# List all wallpapers
+shinsekai-wallpaper list
 ```
 
 Or press **`SUPER + CTRL + SPACE`** on your keyboard to open the visual thumbnail picker.
@@ -238,6 +271,7 @@ Shinsekai ships with complete styling templates for all major tools:
 ```
 ~/.config/omarchy/themes/shinsekai/
 ├── backgrounds/                # 12 Curated 4K/8K Anime Wallpapers
+├── shinsekai-wallpaper        # Custom Wallpaper Downloader & CLI Manager
 ├── dynamic-theme.py           # Hue-Clustering Dynamic Color Extractor & System Sync
 ├── shinsekai-watcher.py       # Background Watcher Daemon
 ├── shinsekai-daemon.sh        # Standalone Bash Watcher
