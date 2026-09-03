@@ -7,11 +7,21 @@ def get_current_background():
         return os.path.realpath(bg_link)
     return os.path.expanduser("~/.config/omarchy/themes/shinsekai/backgrounds/01-asuna-meadow-nature.png")
 
-def extract_vibrant_colors(image_path):
-    cmd = f'magick "{image_path}" -resize 120x120! -colors 16 -format "%c" histogram:info:'
+def boost_color(r, g, b, min_s=0.55, target_v=0.75):
+    h, s, v = colorsys.rgb_to_hsv(r/255.0, g/255.0, b/255.0)
+    s = max(s, min_s)
+    v = max(min(v, 0.90), target_v)
+    nr, ng, nb = colorsys.hsv_to_rgb(h, s, v)
+    hex_code = f"#{int(nr*255):02x}{int(ng*255):02x}{int(nb*255):02x}"
+    return hex_code, int(nr*255), int(ng*255), int(nb*255)
+
+def extract_hue_clustered_palette(image_path):
+    cmd = f'magick "{image_path}" -resize 120x120! -colors 32 -format "%c" histogram:info:'
     res = subprocess.run(cmd, shell=True, capture_output=True, text=True).stdout
     
-    parsed = []
+    # 12 hue bins (30 deg each)
+    bins = [[] for _ in range(12)]
+    
     for line in res.strip().split('\n'):
         match = re.search(r'#([0-9a-fA-F]{6})', line)
         count_match = re.search(r'^\s*([0-9]+):', line)
@@ -24,7 +34,12 @@ def extract_vibrant_colors(image_path):
             b = int(hex_col[5:7], 16) / 255.0
             h, s, v = colorsys.rgb_to_hsv(r, g, b)
             
-            parsed.append({
+            # Filter pure grays/blacks
+            if v < 0.12 or (s < 0.12 and v > 0.88):
+                continue
+                
+            bin_idx = int((h * 360) // 30) % 12
+            bins[bin_idx].append({
                 'hex': hex_col,
                 'count': count,
                 'r': int(r * 255),
@@ -33,25 +48,43 @@ def extract_vibrant_colors(image_path):
                 'h': h,
                 's': s,
                 'v': v,
-                'vibrancy': s * (1.0 - abs(v - 0.65)) * 2.0 + (0.1 if s > 0.3 else 0.0)
+                'weight': count * (s ** 0.6) * (1.0 - abs(v - 0.6) * 0.4)
             })
             
-    vibrant_sorted = sorted(parsed, key=lambda x: x['vibrancy'], reverse=True)
-    
-    if len(vibrant_sorted) >= 2:
-        primary = vibrant_sorted[0]
-        secondary = None
-        for c in vibrant_sorted[1:]:
-            if abs(c['h'] - primary['h']) > 0.15:
-                secondary = c
-                break
-        if not secondary:
-            secondary = vibrant_sorted[1]
-    else:
-        primary = {'hex': '#38bdf8', 'r': 56, 'g': 189, 'b': 248}
-        secondary = {'hex': '#00e5ff', 'r': 0, 'g': 229, 'b': 255}
+    bin_scores = []
+    for idx, b in enumerate(bins):
+        if not b:
+            continue
+        total_weight = sum(item['weight'] for item in b)
+        best_col = max(b, key=lambda x: x['s'] * (1.0 - abs(x['v'] - 0.65)))
+        bin_scores.append((total_weight, idx, best_col))
         
-    return primary, secondary
+    bin_scores.sort(key=lambda x: x[0], reverse=True)
+    
+    if len(bin_scores) >= 2:
+        raw_p = bin_scores[0][2]
+        raw_s = None
+        for item in bin_scores[1:]:
+            if abs(item[1] - bin_scores[0][1]) >= 2:
+                raw_s = item[2]
+                break
+        if not raw_s:
+            raw_s = bin_scores[1][2]
+    elif len(bin_scores) == 1:
+        raw_p = bin_scores[0][2]
+        raw_s = {'r': 56, 'g': 189, 'b': 248}
+    else:
+        raw_p = {'r': 56, 'g': 189, 'b': 248}
+        raw_s = {'r': 0, 'g': 229, 'b': 255}
+        
+    p_hex, pr, pg, pb = boost_color(raw_p['r'], raw_p['g'], raw_p['b'], min_s=0.60, target_v=0.75)
+    s_hex, sr, sg, sb = boost_color(raw_s['r'], raw_s['g'], raw_s['b'], min_s=0.55, target_v=0.70)
+    
+    return {
+        'hex': p_hex, 'r': pr, 'g': pg, 'b': pb
+    }, {
+        'hex': s_hex, 'r': sr, 'g': sg, 'b': sb
+    }
 
 def apply_dynamic_theme(image_path=None):
     if not image_path:
@@ -60,7 +93,7 @@ def apply_dynamic_theme(image_path=None):
     if not os.path.exists(image_path):
         return
         
-    primary, secondary = extract_vibrant_colors(image_path)
+    primary, secondary = extract_hue_clustered_palette(image_path)
     theme_dir = os.path.expanduser("~/.config/omarchy/themes/shinsekai")
     
     # 1. Update chromium.theme
