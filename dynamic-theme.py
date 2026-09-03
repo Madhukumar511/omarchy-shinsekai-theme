@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import subprocess, re, os, colorsys, sys
+import subprocess, re, os, colorsys, sys, base64
 
 THEME_NAME_FILE = os.path.expanduser("~/.local/state/omarchy/current/theme.name")
 
@@ -119,10 +119,10 @@ def apply_dynamic_theme(image_path=None):
     # 1. Update chromium.theme
     rgb_str = f"{primary['r']},{primary['g']},{primary['b']}\n"
     
-    # 2. Update colors.toml (Foreground matching wallpaper color with high luminance)
+    # 2. Update colors.toml (clean white general text + dynamic wallpaper accent for cursor/prompts/highlights)
     colors_toml = f"""accent = "{primary['hex']}"
 cursor = "{secondary['hex']}"
-foreground = "{primary['hex']}"
+foreground = "#f8fafc"
 background = "#090d16"
 selection_foreground = "#090d16"
 selection_background = "{primary['hex']}"
@@ -138,7 +138,7 @@ color3 = "#f59e0b"
 color4 = "{primary['hex']}"
 color5 = "{secondary['hex']}"
 color6 = "#06b6d4"
-color7 = "{primary['hex']}"
+color7 = "#e2e8f0"
 color8 = "#334155"
 color9 = "#f87171"
 color10 = "#34d399"
@@ -149,9 +149,30 @@ color14 = "#67e8f9"
 color15 = "#ffffff"
 """
 
-    # 3. Update foot.ini
+    # 3. Update SwayOSD (Volume, Brightness, CapsLock UI)
+    swayosd_css = f"""/* Shinsekai SwayOSD Volume & Brightness UI */
+@define-color background-color #090d16;
+@define-color border-color {primary['hex']};
+@define-color label #f8fafc;
+@define-color image {primary['hex']};
+@define-color progress {primary['hex']};
+
+window {{
+  border-radius: 14px;
+  border: 2px solid @border-color;
+  background-color: alpha(@background-color, 0.92);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  padding: 10px;
+}}
+label  {{ color: @label; }}
+image  {{ color: @image; }}
+progressbar {{ border-radius: 12px; }}
+progress {{ background-color: @progress; border-radius: 12px; }}
+"""
+
+    # 4. Update foot.ini
     foot_ini = f"""[colors-dark]
-foreground={p_hex_clean}
+foreground=f8fafc
 background=090d16
 selection-foreground=090d16
 selection-background={p_hex_clean}
@@ -165,7 +186,7 @@ regular3=f59e0b
 regular4={p_hex_clean}
 regular5={s_hex_clean}
 regular6=06b6d4
-regular7={p_hex_clean}
+regular7=e2e8f0
 
 bright0=334155
 bright1=f87171
@@ -177,82 +198,102 @@ bright6=67e8f9
 bright7=ffffff
 """
 
-    # 4. Update alacritty.toml
-    alacritty_toml = f"""[colors.primary]
-background = "#090d16"
-foreground = "{primary['hex']}"
+    # 5. Update Starship prompt
+    starship_toml = f"""add_newline = true
+command_timeout = 200
+format = "[$directory$git_branch$git_status]($style)$character"
 
-[colors.cursor]
-text = "#090d16"
-cursor = "{secondary['hex']}"
+[character]
+error_symbol = "[✗](bold #ef4444)"
+success_symbol = "[❯](bold {primary['hex']})"
 
-[colors.selection]
-text = "#090d16"
-background = "{primary['hex']}"
+[directory]
+truncation_length = 2
+truncation_symbol = "…/"
+repo_root_style = "bold {primary['hex']}"
+repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 
-[colors.normal]
-black = "#090d16"
-red = "#ef4444"
-green = "#10b981"
-yellow = "#f59e0b"
-blue = "{primary['hex']}"
-magenta = "{secondary['hex']}"
-cyan = "#06b6d4"
-white = "{primary['hex']}"
+[git_branch]
+format = "[$branch]($style) "
+style = "italic {secondary['hex']}"
 
-[colors.bright]
-black = "#334155"
-red = "#f87171"
-green = "#34d399"
-yellow = "#fbbf24"
-blue = "{primary['hex']}"
-magenta = "{secondary['hex']}"
-cyan = "#67e8f9"
-white = "#ffffff"
+[git_status]
+format     = '[$all_status]($style)'
+style      = "{primary['hex']}"
+ahead      = "⇡${{count}} "
+diverged   = "⇕⇡${{ahead_count}}⇣${{behind_count}} "
+behind     = "⇣${{count}} "
+conflicted = " "
+up_to_date = " "
+untracked  = "? "
+modified   = " "
+stashed    = ""
+staged     = ""
+renamed    = ""
+deleted    = ""
 """
 
-    # 5. Update kitty.conf
-    kitty_conf = f"""foreground {primary['hex']}
-background #090d16
-selection_foreground #090d16
-selection_background {primary['hex']}
-cursor {secondary['hex']}
-cursor_text_color #090d16
+    # 6. Update Walker launcher CSS
+    walker_css = f"""@define-color background #090d16;
+@define-color foreground #f8fafc;
+@define-color selected-background {primary['hex']};
+@define-color selected-foreground #090d16;
+@define-color border {primary['hex']};
 
-color0 #090d16
-color1 #ef4444
-color2 #10b981
-color3 #f59e0b
-color4 {primary['hex']}
-color5 {secondary['hex']}
-color6 #06b6d4
-color7 {primary['hex']}
+#window {{
+  background-color: transparent;
+}}
 
-color8 #334155
-color9 #f87171
-color10 #34d399
-color11 #fbbf24
-color12 {primary['hex']}
-color13 {secondary['hex']}
-color14 #67e8f9
-color15 #ffffff
+#box {{
+  background-color: alpha(@background, 0.94);
+  border: 2px solid @border;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  padding: 16px;
+}}
+
+#search {{
+  background-color: #0f172a;
+  border: 1px solid alpha({primary['hex']}, 0.4);
+  border-radius: 8px;
+  color: @foreground;
+  padding: 10px;
+}}
+
+#item:selected {{
+  background-color: @selected-background;
+  color: @selected-foreground;
+  border-radius: 8px;
+}}
 """
 
-    # Write all config templates across directories
+    # Write configs across directories
     for d in theme_dirs:
         if os.path.exists(d):
             with open(os.path.join(d, "chromium.theme"), "w") as f:
                 f.write(rgb_str)
             with open(os.path.join(d, "colors.toml"), "w") as f:
                 f.write(colors_toml)
+            with open(os.path.join(d, "swayosd.css"), "w") as f:
+                f.write(swayosd_css)
             with open(os.path.join(d, "foot.ini"), "w") as f:
                 f.write(foot_ini)
-            with open(os.path.join(d, "alacritty.toml"), "w") as f:
-                f.write(alacritty_toml)
-            with open(os.path.join(d, "kitty.conf"), "w") as f:
-                f.write(kitty_conf)
+            with open(os.path.join(d, "starship.toml"), "w") as f:
+                f.write(starship_toml)
+            with open(os.path.join(d, "walker.css"), "w") as f:
+                f.write(walker_css)
 
-    # 6. Update hyprland.lua & looknfeel.lua
+    # Also update user live configs
+    user_swayosd = os.path.expanduser("~/.config/swayosd/style.css")
+    if os.path.exists(os.path.dirname(user_swayosd)):
+        with open(user_swayosd, "w") as f:
+            f.write(swayosd_css)
+
+    user_starship = os.path.expanduser("~/.config/starship.toml")
+    with open(user_starship, "w") as f:
+        f.write(starship_toml)
+
+    # 7. Update Hyprland Look & Feel
     hypr_lua = f"""-- Shinsekai Dynamic Anime Theme for Hyprland
 local active_border_color = {{ colors = {{ "rgba({primary['r']:02x}{primary['g']:02x}{primary['b']:02x}ee)", "rgba({secondary['r']:02x}{secondary['g']:02x}{secondary['b']:02x}ee)" }}, angle = 45 }}
 local inactive_border_color = "rgba(0f172a66)"
@@ -323,15 +364,20 @@ hl.config({{
     with open(looknfeel_path, "w") as f:
         f.write(hypr_lua)
 
-    # 7. Instant live browser & terminal updates
+    # 8. Broadcast to Top Bar / QuickShell via IPC
+    colors_payload = base64.b64encode(colors_toml.encode('utf-8')).decode('utf-8')
+    subprocess.run(f"omarchy-shell -q shell applyTheme '{colors_payload}' '' >/dev/null 2>&1", shell=True)
+
+    # 9. Update Browser, Terminal, Templates & Hyprland
     subprocess.run("omarchy-theme-set-browser >/dev/null 2>&1", shell=True)
     subprocess.run("brave --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
     subprocess.run("chromium --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
+    subprocess.run("omarchy-theme-set-templates >/dev/null 2>&1", shell=True)
     subprocess.run("omarchy-theme-set-foot >/dev/null 2>&1", shell=True)
     subprocess.run("omarchy-restart-terminal >/dev/null 2>&1", shell=True)
     subprocess.run("hyprctl reload >/dev/null 2>&1", shell=True)
     
-    print(f"[Shinsekai Dynamic] Terminal & UI text matched to wallpaper: {os.path.basename(image_path)} -> Foreground: {primary['hex']} | Glow: {secondary['hex']}", flush=True)
+    print(f"[Shinsekai Dynamic] Synchronized All UI: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
 
 if __name__ == "__main__":
     img = sys.argv[1] if len(sys.argv) > 1 else None

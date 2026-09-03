@@ -1,9 +1,9 @@
-/* Shinsekai (新世界) SwayOSD Theme */
+/* Shinsekai SwayOSD Volume & Brightness UI */
 @define-color background-color #090d16;
-@define-color border-color #f43f5e;
+@define-color border-color #2cf535;
 @define-color label #f8fafc;
-@define-color image #38bdf8;
-@define-color progress #f43f5e;
+@define-color image #2cf535;
+@define-color progress #2cf535;
 
 window {
   border-radius: 14px;
