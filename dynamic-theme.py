@@ -7,10 +7,12 @@ def get_current_background():
         return os.path.realpath(bg_link)
     return os.path.expanduser("~/.config/omarchy/themes/shinsekai/backgrounds/01-asuna-meadow-nature.png")
 
-def boost_color(r, g, b, min_s=0.55, target_v=0.75):
+def boost_color_for_readability(r, g, b, min_s=0.55, target_v=0.88):
     h, s, v = colorsys.rgb_to_hsv(r/255.0, g/255.0, b/255.0)
-    s = max(s, min_s)
-    v = max(min(v, 0.90), target_v)
+    # Ensure optimal saturation (not washed out, not blinding)
+    s = max(min(s, 0.85), min_s)
+    # Ensure luminous high brightness for crystal-clear readability against dark backgrounds
+    v = max(min(v, 0.98), target_v)
     nr, ng, nb = colorsys.hsv_to_rgb(h, s, v)
     hex_code = f"#{int(nr*255):02x}{int(ng*255):02x}{int(nb*255):02x}"
     return hex_code, int(nr*255), int(ng*255), int(nb*255)
@@ -77,8 +79,8 @@ def extract_hue_clustered_palette(image_path):
         raw_p = {'r': 56, 'g': 189, 'b': 248}
         raw_s = {'r': 0, 'g': 229, 'b': 255}
         
-    p_hex, pr, pg, pb = boost_color(raw_p['r'], raw_p['g'], raw_p['b'], min_s=0.60, target_v=0.75)
-    s_hex, sr, sg, sb = boost_color(raw_s['r'], raw_s['g'], raw_s['b'], min_s=0.55, target_v=0.70)
+    p_hex, pr, pg, pb = boost_color_for_readability(raw_p['r'], raw_p['g'], raw_p['b'], min_s=0.55, target_v=0.88)
+    s_hex, sr, sg, sb = boost_color_for_readability(raw_s['r'], raw_s['g'], raw_s['b'], min_s=0.50, target_v=0.84)
     
     return {
         'hex': p_hex, 'r': pr, 'g': pg, 'b': pb
@@ -100,7 +102,7 @@ def apply_dynamic_theme(image_path=None):
     with open(os.path.join(theme_dir, "chromium.theme"), "w") as f:
         f.write(f"{primary['r']},{primary['g']},{primary['b']}\n")
         
-    # 2. Update colors.toml
+    # 2. Update colors.toml (with guaranteed high-contrast white foreground and crisp luminous ANSI accents)
     colors_toml = f"""accent = "{primary['hex']}"
 cursor = "{secondary['hex']}"
 foreground = "#f8fafc"
@@ -118,7 +120,7 @@ color2 = "#10b981"
 color3 = "#f59e0b"
 color4 = "{primary['hex']}"
 color5 = "{secondary['hex']}"
-color6 = "#00e5ff"
+color6 = "#06b6d4"
 color7 = "#e2e8f0"
 color8 = "#334155"
 color9 = "#f87171"
@@ -208,7 +210,7 @@ hl.config({{
     subprocess.run("omarchy-theme-set shinsekai >/dev/null 2>&1", shell=True, env=env)
     subprocess.run("hyprctl reload >/dev/null 2>&1", shell=True)
     
-    print(f"[Shinsekai Dynamic] Synchronized full system: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
+    print(f"[Shinsekai Dynamic] High-contrast theme applied for: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
 
 if __name__ == "__main__":
     img = sys.argv[1] if len(sys.argv) > 1 else None
