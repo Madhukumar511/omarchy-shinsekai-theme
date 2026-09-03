@@ -16,7 +16,7 @@ def boost_color_for_readability(r, g, b, min_s=0.55, target_v=0.88):
     return hex_code, int(nr*255), int(ng*255), int(nb*255)
 
 def extract_hue_clustered_palette(image_path):
-    cmd = f'magick "{image_path}" -resize 120x120! -colors 32 -format "%c" histogram:info:'
+    cmd = f'magick "{image_path}" -resize 120x120! -colors 48 -format "%c" histogram:info:'
     res = subprocess.run(cmd, shell=True, capture_output=True, text=True).stdout
     
     bins = [[] for _ in range(12)]
@@ -33,10 +33,15 @@ def extract_hue_clustered_palette(image_path):
             b = int(hex_col[5:7], 16) / 255.0
             h, s, v = colorsys.rgb_to_hsv(r, g, b)
             
-            if v < 0.12 or (s < 0.12 and v > 0.88):
+            # Filter pure dark mud and washed-out shadows (V < 0.28 or S < 0.20)
+            if v < 0.28 or s < 0.20:
                 continue
                 
             bin_idx = int((h * 360) // 30) % 12
+            
+            # Radiant Chroma & Luma weighting (rewards true vibrant scenery & sunset highlights)
+            weight = count * (s ** 2.2) * (v ** 2.0)
+            
             bins[bin_idx].append({
                 'hex': hex_col,
                 'count': count,
@@ -46,7 +51,7 @@ def extract_hue_clustered_palette(image_path):
                 'h': h,
                 's': s,
                 'v': v,
-                'weight': count * (s ** 0.6) * (1.0 - abs(v - 0.6) * 0.4)
+                'weight': weight
             })
             
     bin_scores = []
@@ -54,7 +59,7 @@ def extract_hue_clustered_palette(image_path):
         if not b:
             continue
         total_weight = sum(item['weight'] for item in b)
-        best_col = max(b, key=lambda x: x['s'] * (1.0 - abs(x['v'] - 0.65)))
+        best_col = max(b, key=lambda x: (x['s'] ** 2.0) * (x['v'] ** 1.8))
         bin_scores.append((total_weight, idx, best_col))
         
     bin_scores.sort(key=lambda x: x[0], reverse=True)
@@ -72,8 +77,8 @@ def extract_hue_clustered_palette(image_path):
         raw_p = bin_scores[0][2]
         raw_s = {'r': 56, 'g': 189, 'b': 248}
     else:
-        raw_p = {'r': 56, 'g': 189, 'b': 248}
-        raw_s = {'r': 0, 'g': 229, 'b': 255}
+        raw_p = {'r': 239, 'g': 68, 'b': 68}
+        raw_s = {'r': 245, 'g': 158, 'b': 11}
         
     p_hex, pr, pg, pb = boost_color_for_readability(raw_p['r'], raw_p['g'], raw_p['b'], min_s=0.55, target_v=0.88)
     s_hex, sr, sg, sb = boost_color_for_readability(raw_s['r'], raw_s['g'], raw_s['b'], min_s=0.50, target_v=0.84)
