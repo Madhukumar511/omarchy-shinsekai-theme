@@ -13,8 +13,8 @@ def print_banner():
 
 def print_commands_menu():
     print("""\033[1;33mAvailable Commands:\033[0m
-  \033[1;32madd <url-or-path> [name]\033[0m   Add & download wallpaper (auto-assigned next number)
-  \033[1;32mlist\033[0m                      View all wallpapers with their assigned numbers
+  \033[1;32madd <url-or-path> [name]\033[0m   Download & add 4K wallpaper (auto-assigned next number)
+  \033[1;32mlist\033[0m                      View all wallpapers with their assigned numbers [01-12]
   \033[1;32mset <number>\033[0m              Switch active wallpaper by number (e.g. \033[36mset 4\033[0m)
   \033[1;32mremove <number>\033[0m           Delete wallpaper by number (e.g. \033[36mremove 13\033[0m)
   \033[1;32mnext\033[0m                      Cycle to next wallpaper
@@ -85,12 +85,10 @@ def get_image_info(path):
         return int(parts[0]), int(parts[1]), parts[2], parts[3]
     return 0, 0, "UNKNOWN", "0B"
 
-def reindex_wallpapers():
-    """Ensures all wallpapers have clean sequential numbers (01, 02, 03...)."""
+def get_all_wallpapers():
     if not os.path.exists(BG_DIR):
         return []
-    files = sorted([f for f in os.listdir(BG_DIR) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))])
-    return files
+    return sorted([f for f in os.listdir(BG_DIR) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))])
 
 def add_wallpaper(source, custom_name=None):
     if not source:
@@ -144,7 +142,7 @@ def add_wallpaper(source, custom_name=None):
         print(f"\033[1;31m⚠️ Low Resolution ({w}x{h}):\033[0m Upscaling to 4K canvas.")
 
     # 3. Automatically assign next sequential number
-    existing_files = reindex_wallpapers()
+    existing_files = get_all_wallpapers()
     next_idx = len(existing_files) + 1
 
     if custom_name:
@@ -176,7 +174,7 @@ def add_wallpaper(source, custom_name=None):
     print("\033[1;35m✨ Theme colors dynamically synchronized across all apps!\033[0m")
 
 def list_wallpapers():
-    files = reindex_wallpapers()
+    files = get_all_wallpapers()
     if not files:
         print("No wallpapers found.")
         return
@@ -193,17 +191,22 @@ def list_wallpapers():
     print()
 
 def remove_wallpaper(target):
-    files = reindex_wallpapers()
+    files = get_all_wallpapers()
     to_delete = None
 
-    target = str(target).strip()
-    if target.isdigit():
-        idx = int(target) - 1
-        if 0 <= idx < len(files):
-            to_delete = files[idx]
+    target_str = str(target).strip()
+    if target_str.isdigit():
+        target_num = int(target_str)
+        # Check prefix match first (e.g. 13 -> 13-*.jpg)
+        for f in files:
+            if f.startswith(f"{target_num:02d}-"):
+                to_delete = f
+                break
+        if not to_delete and 1 <= target_num <= len(files):
+            to_delete = files[target_num - 1]
     else:
         for f in files:
-            if target.lower() in f.lower():
+            if target_str.lower() in f.lower():
                 to_delete = f
                 break
 
@@ -217,17 +220,22 @@ def remove_wallpaper(target):
     subprocess.run("omarchy theme bg next 2>/dev/null || true", shell=True)
 
 def set_wallpaper(target):
-    files = reindex_wallpapers()
+    files = get_all_wallpapers()
     chosen = None
 
-    target = str(target).strip()
-    if target.isdigit():
-        idx = int(target) - 1
-        if 0 <= idx < len(files):
-            chosen = files[idx]
+    target_str = str(target).strip()
+    if target_str.isdigit():
+        target_num = int(target_str)
+        # Match by prefix (e.g. 02 -> 02-*.png)
+        for f in files:
+            if f.startswith(f"{target_num:02d}-"):
+                chosen = f
+                break
+        if not chosen and 1 <= target_num <= len(files):
+            chosen = files[target_num - 1]
     else:
         for f in files:
-            if target.lower() in f.lower():
+            if target_str.lower() in f.lower():
                 chosen = f
                 break
 
@@ -239,14 +247,13 @@ def set_wallpaper(target):
     subprocess.run(f'omarchy theme bg set "{p}"', shell=True)
     if os.path.exists(DYNAMIC_SCRIPT):
         subprocess.run(f'python3 "{DYNAMIC_SCRIPT}" "{p}"', shell=True)
-    print(f"\033[1;32m✨ Active wallpaper set to [{int(target) if target.isdigit() else 0:02d}]:\033[0m {chosen}")
+    print(f"\033[1;32m✨ Active wallpaper set to:\033[0m {chosen}")
 
 def parse_and_execute(cmd_line):
     cmd_line = cmd_line.strip()
     if not cmd_line:
         return
 
-    # Split using shell lexer to handle quotes cleanly
     try:
         parts = shlex.split(cmd_line)
     except Exception:
@@ -259,6 +266,7 @@ def parse_and_execute(cmd_line):
     if parts[0] in ["shin-bg", "shinsekai-wallpaper", "shinsekai"]:
         parts = parts[1:]
         if not parts:
+            print_commands_menu()
             return
 
     action = parts[0].lower()
@@ -327,7 +335,6 @@ def main():
         interactive_loop()
         return
 
-    # Parse command line arguments directly
     full_cmd = " ".join(sys.argv[1:])
     parse_and_execute(full_cmd)
 
