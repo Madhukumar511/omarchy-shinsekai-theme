@@ -21,6 +21,7 @@ def print_commands_menu():
   \033[1;32madd <url-or-path> [name]\033[0m   Download & add 4K wallpaper (auto-assigned next sequential number)
   \033[1;32mlist\033[0m                      View all wallpapers with their assigned numbers {max_label}
   \033[1;32mset <number>\033[0m              Switch active wallpaper by number (e.g. \033[36mset 4\033[0m)
+  \033[1;32mrename <num> <name>\033[0m       Rename a wallpaper (e.g. \033[36mrename 13 lord-of-mysteries\033[0m)
   \033[1;32mremove <number>\033[0m           Delete wallpaper to recovery trash (e.g. \033[36mremove 13\033[0m)
   \033[1;32mrestore [number]\033[0m          Undo / Restore deleted wallpaper (e.g. \033[36mrestore 13\033[0m or \033[36mundo\033[0m)
   \033[1;32mtrash\033[0m                     View deleted wallpapers in recovery trash
@@ -109,6 +110,58 @@ def save_trash_history(history):
 def refresh_wallpaper_cache():
     subprocess.run("omarchy-theme-bg-cache >/dev/null 2>&1 &", shell=True)
 
+def rename_wallpaper(target, new_name):
+    if not target or not new_name:
+        print("\033[1;31m❌ Usage: rename <number> <new-name>\033[0m (e.g. rename 13 lord-of-mysteries)")
+        return
+
+    files = get_all_wallpapers()
+    chosen = None
+    target_str = str(target).strip()
+
+    if target_str.isdigit():
+        target_num = int(target_str)
+        for f in files:
+            if f.startswith(f"{target_num:02d}-"):
+                chosen = f
+                break
+        if not chosen and 1 <= target_num <= len(files):
+            chosen = files[target_num - 1]
+    else:
+        for f in files:
+            if target_str.lower() in f.lower():
+                chosen = f
+                break
+
+    if not chosen:
+        print(f"\033[1;31m❌ Wallpaper #{target} not found.\033[0m")
+        return
+
+    num_prefix = chosen.split('-')[0]
+    ext = os.path.splitext(chosen)[1]
+    clean_name = re.sub(r'[^a-zA-Z0-9_-]', '-', new_name).strip('-').lower()
+    
+    if not clean_name.endswith("-4k") and not clean_name.endswith("-8k"):
+        clean_name += "-4k"
+        
+    new_filename = f"{num_prefix}-{clean_name}{ext}"
+
+    old_path = os.path.join(BG_DIR, chosen)
+    new_path = os.path.join(BG_DIR, new_filename)
+
+    shutil.move(old_path, new_path)
+
+    if os.path.exists(ACTIVE_BG_DIR):
+        old_active = os.path.join(ACTIVE_BG_DIR, chosen)
+        new_active = os.path.join(ACTIVE_BG_DIR, new_filename)
+        if os.path.exists(old_active):
+            shutil.move(old_active, new_active)
+        else:
+            shutil.copy2(new_path, new_active)
+
+    refresh_wallpaper_cache()
+    print(f"\033[1;32m✨ Renamed [{num_prefix}]:\033[0m {chosen} ➔ \033[1;36m{new_filename}\033[0m")
+
 def add_wallpaper(source, custom_name=None):
     if not source:
         print("\033[1;31m❌ Error: Please provide an image URL or local file path.\033[0m")
@@ -137,7 +190,7 @@ def add_wallpaper(source, custom_name=None):
   Then paste it into \033[1;36mshin-bg\033[0m!
 
   \033[1;32m👉 Or download the image to ~/Downloads and run:\033[0m
-     \033[1;36mshin-bg add ~/Downloads/my-image.jpg\033[0m
+     \033[1;36mshin-bg add ~/Downloads/my-image.jpg [character-name]\033[0m
 """)
             return
     else:
@@ -168,14 +221,16 @@ def add_wallpaper(source, custom_name=None):
 
     if custom_name:
         clean_name = re.sub(r'[^a-zA-Z0-9_-]', '-', custom_name).strip('-').lower()
+        if not clean_name.endswith("-4k") and not clean_name.endswith("-8k"):
+            clean_name += "-4k"
         target_filename = f"{next_idx:02d}-{clean_name}.jpg"
     else:
         url_leaf = os.path.splitext(os.path.basename(clean_source.split('?')[0]))[0]
         url_leaf = re.sub(r'[^a-zA-Z0-9_-]', '-', url_leaf).strip('-').lower()
-        if len(url_leaf) > 3 and not url_leaf.startswith("wallpaper"):
-            target_filename = f"{next_idx:02d}-{url_leaf[:24]}.jpg"
+        if len(url_leaf) > 3 and not url_leaf.isdigit() and not url_leaf.startswith("wallpaper"):
+            target_filename = f"{next_idx:02d}-{url_leaf[:24]}-4k.jpg"
         else:
-            target_filename = f"{next_idx:02d}-custom-wallpaper.jpg"
+            target_filename = f"{next_idx:02d}-anime-scene-4k.jpg"
 
     dest_path = os.path.join(BG_DIR, target_filename)
 
@@ -185,12 +240,10 @@ def add_wallpaper(source, custom_name=None):
         try: os.remove(temp_file)
         except: pass
 
-    # Sync to active runtime theme backgrounds directory
     if os.path.exists(ACTIVE_BG_DIR):
         active_dest = os.path.join(ACTIVE_BG_DIR, target_filename)
         shutil.copy2(dest_path, active_dest)
 
-    # Refresh Walker thumbnail cache for SUPER + CTRL + SPACE
     refresh_wallpaper_cache()
 
     print(f"\033[1;32m🎉 Added Wallpaper #{next_idx:02d}:\033[0m {target_filename} ({os.path.getsize(dest_path)} bytes)")
@@ -245,7 +298,6 @@ def remove_wallpaper(target):
     trash_path = os.path.join(TRASH_DIR, to_delete)
     shutil.move(src_path, trash_path)
 
-    # Also remove from active state dir
     if os.path.exists(ACTIVE_BG_DIR):
         active_src = os.path.join(ACTIVE_BG_DIR, to_delete)
         if os.path.exists(active_src):
@@ -383,7 +435,7 @@ def parse_and_execute(cmd_line):
         name = parts[2] if len(parts) > 2 else None
         if not src:
             src = input("\033[1;36mEnter Image URL or Path: \033[0m").strip()
-            name = input("\033[1;36mWallpaper Name (optional): \033[0m").strip() or None
+            name = input("\033[1;36mWallpaper Name (optional, e.g. lord-of-mysteries): \033[0m").strip() or None
         add_wallpaper(src, name)
     elif action in ["list", "ls", "2"]:
         list_wallpapers()
@@ -392,6 +444,14 @@ def parse_and_execute(cmd_line):
         if not target:
             target = input("\033[1;36mEnter Wallpaper Number (e.g. 3): \033[0m").strip()
         set_wallpaper(target)
+    elif action in ["rename", "mv", "name"]:
+        target = parts[1] if len(parts) > 1 else ""
+        name = parts[2] if len(parts) > 2 else ""
+        if not target:
+            target = input("\033[1;36mEnter Wallpaper Number to Rename: \033[0m").strip()
+        if not name:
+            name = input("\033[1;36mEnter New Name (e.g. lord-of-mysteries): \033[0m").strip()
+        rename_wallpaper(target, name)
     elif action in ["remove", "rm", "delete", "del", "4"]:
         target = parts[1] if len(parts) > 1 else ""
         if not target:
@@ -428,7 +488,7 @@ def interactive_loop():
         print(f"\033[1;33m📋 Detected link/file in clipboard:\033[0m {clip}")
         use_clip = input("\033[1mDownload & add this clipboard wallpaper now? [Y/n]: \033[0m").strip().lower()
         if use_clip in ["", "y", "yes"]:
-            name = input("\033[1mWallpaper Name (optional, press Enter to auto-name): \033[0m").strip() or None
+            name = input("\033[1mWallpaper Name (optional, e.g. lord-of-mysteries): \033[0m").strip() or None
             add_wallpaper(clip, name)
             return
 
