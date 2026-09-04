@@ -3,6 +3,7 @@ import sys, os, subprocess, urllib.request, urllib.parse, re, shutil, shlex, tim
 
 THEME_DIR = os.path.expanduser("~/.config/omarchy/themes/shinsekai")
 BG_DIR = os.path.join(THEME_DIR, "backgrounds")
+ACTIVE_BG_DIR = os.path.expanduser("~/.local/state/omarchy/current/theme/backgrounds")
 TRASH_DIR = os.path.join(THEME_DIR, ".trash")
 DYNAMIC_SCRIPT = os.path.join(THEME_DIR, "dynamic-theme.py")
 TRASH_HISTORY_FILE = os.path.join(TRASH_DIR, "history.json")
@@ -39,8 +40,6 @@ def get_clipboard_text():
 
 def resolve_smart_url(url):
     url = url.strip().strip("'\"")
-    
-    # 1. Google Images direct image unpack
     if "google." in url and "imgurl=" in url:
         parsed = urllib.parse.urlparse(url)
         params = urllib.parse.parse_qs(parsed.query)
@@ -49,7 +48,6 @@ def resolve_smart_url(url):
             print(f"\033[1;33m🔍 Extracted direct image from Google Images:\033[0m {real_url}")
             return real_url
 
-    # 2. Wallhaven page URL unpack
     m = re.search(r'wallhaven\.cc/w/([a-z0-9]+)', url)
     if m:
         wid = m.group(1)
@@ -67,7 +65,6 @@ def resolve_smart_url(url):
     return url
 
 def download_file_with_curl(url, dest):
-    """Robust download using curl with modern browser User-Agent, referer, and redirects."""
     user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
     cmd = [
         "curl", "-s", "-L", "--fail",
@@ -108,6 +105,9 @@ def save_trash_history(history):
     os.makedirs(TRASH_DIR, exist_ok=True)
     with open(TRASH_HISTORY_FILE, "w") as f:
         json.dump(history, f, indent=2)
+
+def refresh_wallpaper_cache():
+    subprocess.run("omarchy-theme-bg-cache >/dev/null 2>&1 &", shell=True)
 
 def add_wallpaper(source, custom_name=None):
     if not source:
@@ -150,7 +150,6 @@ def add_wallpaper(source, custom_name=None):
     w, h, fmt, size = get_image_info(temp_file)
     if w == 0 or h == 0:
         print("\033[1;31m❌ Downloaded file is not a valid image.\033[0m")
-        print("\033[1;33m💡 Make sure to copy the direct image link ('Copy image address') rather than the webpage link.\033[0m")
         return
 
     print(f"\033[1;34m🔍 Resolution:\033[0m {w}x{h} ({fmt}) | Size: {size}")
@@ -186,12 +185,20 @@ def add_wallpaper(source, custom_name=None):
         try: os.remove(temp_file)
         except: pass
 
+    # Sync to active runtime theme backgrounds directory
+    if os.path.exists(ACTIVE_BG_DIR):
+        active_dest = os.path.join(ACTIVE_BG_DIR, target_filename)
+        shutil.copy2(dest_path, active_dest)
+
+    # Refresh Walker thumbnail cache for SUPER + CTRL + SPACE
+    refresh_wallpaper_cache()
+
     print(f"\033[1;32m🎉 Added Wallpaper #{next_idx:02d}:\033[0m {target_filename} ({os.path.getsize(dest_path)} bytes)")
 
     subprocess.run(f'omarchy theme bg set "{dest_path}"', shell=True)
     if os.path.exists(DYNAMIC_SCRIPT):
         subprocess.run(f'python3 "{DYNAMIC_SCRIPT}" "{dest_path}"', shell=True)
-    print("\033[1;35m✨ Theme colors dynamically synchronized across all apps!\033[0m")
+    print("\033[1;35m✨ Active wallpaper set, thumbnail cached & colors synchronized across all apps!\033[0m")
 
 def list_wallpapers():
     files = get_all_wallpapers()
@@ -238,12 +245,20 @@ def remove_wallpaper(target):
     trash_path = os.path.join(TRASH_DIR, to_delete)
     shutil.move(src_path, trash_path)
 
+    # Also remove from active state dir
+    if os.path.exists(ACTIVE_BG_DIR):
+        active_src = os.path.join(ACTIVE_BG_DIR, to_delete)
+        if os.path.exists(active_src):
+            try: os.remove(active_src)
+            except: pass
+
     history = load_trash_history()
     history.append({
         "filename": to_delete,
         "deleted_at": time.time()
     })
     save_trash_history(history)
+    refresh_wallpaper_cache()
 
     print(f"\033[1;32m🗑️ Moved to recovery trash:\033[0m {to_delete}")
     print(f"\033[2m💡 Mistake? Type \033[1;36mshin-bg restore {to_delete[:2]}\033[0m\033[2m or \033[1;36mshin-bg undo\033[0m\033[2m anytime to restore it!\033[0m")
@@ -286,8 +301,12 @@ def restore_wallpaper(target=None):
         return
 
     shutil.move(trash_path, dest_path)
+    if os.path.exists(ACTIVE_BG_DIR):
+        shutil.copy2(dest_path, os.path.join(ACTIVE_BG_DIR, filename))
+
     history = [h for h in history if h["filename"] != filename]
     save_trash_history(history)
+    refresh_wallpaper_cache()
 
     print(f"\033[1;32m🎉 Restored Wallpaper:\033[0m {filename}")
     subprocess.run(f'omarchy theme bg set "{dest_path}"', shell=True)
