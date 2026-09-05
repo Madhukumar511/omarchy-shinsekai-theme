@@ -1,24 +1,32 @@
-# Shinsekai Anime Starship Prompt
 add_newline = true
 command_timeout = 200
-format = "[$directory]($style) [❯](bold #38bdf8)[❯](bold #00e5ff) "
+format = "[$directory$git_branch$git_status]($style)$character"
 
 [character]
 error_symbol = "[✗](bold #ef4444)"
-success_symbol = "[❯](bold #38bdf8)"
+success_symbol = "[❯](bold #2cf535)"
 
 [directory]
-truncation_length = 3
+truncation_length = 2
 truncation_symbol = "…/"
-style = "bold #38bdf8"
-read_only = " 󰌾"
-read_only_style = "#ef4444"
+repo_root_style = "bold #2cf535"
+repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
-format = "[$symbol$branch]($style) "
-symbol = " "
-style = "italic #38bdf8"
+format = "[$branch]($style) "
+style = "italic #b528e0"
 
 [git_status]
-format = "([$all_status$ahead_behind]($style) )"
-style = "#00e5ff"
+format     = '[$all_status]($style)'
+style      = "#2cf535"
+ahead      = "⇡${count} "
+diverged   = "⇕⇡${ahead_count}⇣${behind_count} "
+behind     = "⇣${count} "
+conflicted = " "
+up_to_date = " "
+untracked  = "? "
+modified   = " "
+stashed    = ""
+staged     = ""
+renamed    = ""
+deleted    = ""

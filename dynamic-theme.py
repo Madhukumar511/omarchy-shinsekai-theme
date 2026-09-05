@@ -108,8 +108,8 @@ def apply_dynamic_theme(image_path=None):
         return
         
     primary, secondary = extract_hue_clustered_palette(image_path)
-    p_hex_clean = primary['hex'].lstrip('#')
-    s_hex_clean = secondary['hex'].lstrip('#')
+    p_hex_clean = primary['hex'].lstrip('#').upper()
+    s_hex_clean = secondary['hex'].lstrip('#').upper()
     
     theme_dirs = [
         os.path.expanduser("~/.config/omarchy/themes/shinsekai"),
@@ -175,16 +175,16 @@ progress {{ background-color: @progress; border-radius: 12px; }}
 foreground=f8fafc
 background=090d16
 selection-foreground=090d16
-selection-background={p_hex_clean}
+selection-background={p_hex_clean.lower()}
 
-cursor=090d16 {s_hex_clean}
+cursor=090d16 {s_hex_clean.lower()}
 
 regular0=090d16
 regular1=ef4444
 regular2=10b981
 regular3=f59e0b
-regular4={p_hex_clean}
-regular5={s_hex_clean}
+regular4={p_hex_clean.lower()}
+regular5={s_hex_clean.lower()}
 regular6=06b6d4
 regular7=e2e8f0
 
@@ -192,8 +192,8 @@ bright0=334155
 bright1=f87171
 bright2=34d399
 bright3=fbbf24
-bright4={p_hex_clean}
-bright5={s_hex_clean}
+bright4={p_hex_clean.lower()}
+bright5={s_hex_clean.lower()}
 bright6=67e8f9
 bright7=ffffff
 """
@@ -267,6 +267,32 @@ deleted    = ""
 }}
 """
 
+    # 7. Update Lock Screen Tokens (Hyprlock & Omarchy Shell Lock)
+    shell_lock_toml = f"""text             = "#f8fafc"
+placeholder      = "#64748b"
+text-error       = "#ef4444"
+border           = "#1e293b"
+border-active    = "{primary['hex']}"
+border-error     = "#ef4444"
+"""
+
+    hyprlock_conf = f"""# Shinsekai (新世界) Dynamic Lock Screen
+$color           = rgb(090D16)
+$inner_color     = rgba(9, 13, 22, 0.88)
+$outer_color     = rgb({p_hex_clean})
+$accent_color    = rgb({s_hex_clean})
+$font_color      = rgb(F8FAFC)
+$placeholder_color = rgba(248, 250, 252, 0.50)
+$check_color     = rgb({s_hex_clean})
+
+background {{
+    blur_passes = 3
+    blur_size   = 8
+    vibrancy    = 0.90
+    vibrancy_darkness = 0.25
+}}
+"""
+
     # Write configs across directories
     for d in theme_dirs:
         if os.path.exists(d):
@@ -282,6 +308,22 @@ deleted    = ""
                 f.write(starship_toml)
             with open(os.path.join(d, "walker.css"), "w") as f:
                 f.write(walker_css)
+            with open(os.path.join(d, "shell.lock.toml"), "w") as f:
+                f.write(shell_lock_toml)
+            with open(os.path.join(d, "hyprlock.conf"), "w") as f:
+                f.write(hyprlock_conf)
+
+            # Keep shell.toml in sync if present
+            shell_toml_path = os.path.join(d, "shell.toml")
+            if os.path.exists(shell_toml_path):
+                try:
+                    with open(shell_toml_path, "r") as sf:
+                        st_content = sf.read()
+                    st_content = re.sub(r'(\[lock\][^\[]*?border-active\s*=\s*")[^"]*(")', rf'\g<1>{primary["hex"]}\g<2>', st_content)
+                    with open(shell_toml_path, "w") as sf:
+                        sf.write(st_content)
+                except Exception:
+                    pass
 
     # Also update user live configs
     user_swayosd = os.path.expanduser("~/.config/swayosd/style.css")
@@ -293,7 +335,7 @@ deleted    = ""
     with open(user_starship, "w") as f:
         f.write(starship_toml)
 
-    # 7. Update Hyprland Look & Feel
+    # 8. Update Hyprland Look & Feel
     hypr_lua = f"""-- Shinsekai Dynamic Anime Theme for Hyprland
 local active_border_color = {{ colors = {{ "rgba({primary['r']:02x}{primary['g']:02x}{primary['b']:02x}ee)", "rgba({secondary['r']:02x}{secondary['g']:02x}{secondary['b']:02x}ee)" }}, angle = 45 }}
 local inactive_border_color = "rgba(0f172a66)"
@@ -364,11 +406,11 @@ hl.config({{
     with open(looknfeel_path, "w") as f:
         f.write(hypr_lua)
 
-    # 8. Broadcast to Top Bar / QuickShell via IPC
+    # 9. Broadcast to Top Bar / QuickShell via IPC
     colors_payload = base64.b64encode(colors_toml.encode('utf-8')).decode('utf-8')
     subprocess.run(f"omarchy-shell -q shell applyTheme '{colors_payload}' '' >/dev/null 2>&1", shell=True)
 
-    # 9. Update Browser, Terminal, Templates & Hyprland
+    # 10. Update Browser, Terminal, Templates & Hyprland
     subprocess.run("omarchy-theme-set-browser >/dev/null 2>&1", shell=True)
     subprocess.run("brave --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
     subprocess.run("chromium --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
@@ -377,7 +419,7 @@ hl.config({{
     subprocess.run("omarchy-restart-terminal >/dev/null 2>&1", shell=True)
     subprocess.run("hyprctl reload >/dev/null 2>&1", shell=True)
     
-    print(f"[Shinsekai Dynamic] Synchronized All UI: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
+    print(f"[Shinsekai Dynamic] Synchronized All UI & Lockscreen: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
 
 if __name__ == "__main__":
     img = sys.argv[1] if len(sys.argv) > 1 else None

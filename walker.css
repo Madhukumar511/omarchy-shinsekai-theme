@@ -1,50 +1,31 @@
-/* Shinsekai (新世界) Walker Launcher Theme */
-@define-color selected-text #f43f5e;
-@define-color text          #f8fafc;
-@define-color base          #090d16;
-@define-color border        #f43f5e;
-@define-color foreground    #f8fafc;
-@define-color background    #090d16;
-@define-color hover         #38bdf8;
-@define-color selected-box  #f43f5e;
+@define-color background #090d16;
+@define-color foreground #f8fafc;
+@define-color selected-background #2cf535;
+@define-color selected-foreground #090d16;
+@define-color border #2cf535;
 
-* {
-  font-family: 'JetBrainsMono Nerd Font', 'CaskaydiaMono Nerd Font', monospace;
+#window {
+  background-color: transparent;
 }
 
-window { background: transparent; }
-
-window .search-container,
-window .search {
-  background: alpha(@base, 0.94);
-  box-shadow: 0 10px 36px rgba(0,0,0,0.6),
-              0 0 0 1px alpha(@border, 0.6);
-  color: @foreground;
+#box {
+  background-color: alpha(@background, 0.94);
   border: 2px solid @border;
   border-radius: 14px;
-  padding: 8px 18px;
-  margin-top: 1px;
-  font-size: 14px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  padding: 16px;
 }
 
-.box-wrapper {
-  background: alpha(@base, 0.94);
-  border: 2px solid @border;
-  border-radius: 18px;
-  box-shadow: 0 14px 44px rgba(0,0,0,0.6),
-              0 0 0 1px alpha(@border, 0.4);
+#search {
+  background-color: #0f172a;
+  border: 1px solid alpha(#2cf535, 0.4);
+  border-radius: 8px;
+  color: @foreground;
   padding: 10px;
 }
 
-child:selected {
-  border-radius: 12px;
-  background-color: alpha(@selected-box, 0.22);
-  box-shadow: 0 4px 14px rgba(244,63,94,0.3);
-  transition: background-color 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+#item:selected {
+  background-color: @selected-background;
+  color: @selected-foreground;
+  border-radius: 8px;
 }
-child:selected .item-box {
-  transition: transform 0.14s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: translateX(4px);
-}
-child:selected .item-box * { color: @selected-text; }
-child:hover { background-color: alpha(@hover, 0.15); }
