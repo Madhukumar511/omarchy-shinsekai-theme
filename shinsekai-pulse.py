@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import subprocess, time, os, re, sys, select
+import subprocess, time, os, re, sys, json
 
 CONFIG_FILE = os.path.expanduser("~/.config/omarchy/themes/shinsekai/.config.json")
 THEME_NAME_FILE = os.path.expanduser("~/.local/state/omarchy/current/theme.name")
@@ -31,7 +31,6 @@ def get_theme_colors():
 def is_pulse_enabled():
     if os.path.exists(CONFIG_FILE):
         try:
-            import json
             with open(CONFIG_FILE, "r") as f:
                 data = json.load(f)
                 return data.get("audio_reactive", False)
@@ -43,20 +42,21 @@ def reset_border():
     p_hex, s_hex = get_theme_colors()
     pr, pg, pb = int(p_hex[1:3], 16), int(p_hex[3:5], 16), int(p_hex[5:7], 16)
     sr, sg, sb = int(s_hex[1:3], 16), int(s_hex[3:5], 16), int(s_hex[5:7], 16)
-    border_val = f"rgba({pr:02x}{pg:02x}{pb:02x}ee) rgba({sr:02x}{sg:02x}{sb:02x}ee) 45deg"
-    subprocess.run(f"hyprctl keyword general:col.active_border '{border_val}' >/dev/null 2>&1", shell=True)
+    lua_code = f'hl.config({{ general = {{ col = {{ active_border = {{ colors = {{ "rgba({pr:02x}{pg:02x}{pb:02x}ee)", "rgba({sr:02x}{sg:02x}{sb:02x}ee)" }}, angle = 45 }} }} }} }})'
+    subprocess.run(["hyprctl", "eval", lua_code], capture_output=True)
 
 def is_audio_playing():
     try:
-        res = subprocess.run(["pactl", "list", "sink-inputs", "short"], capture_output=True, text=True, timeout=1)
-        return len(res.stdout.strip()) > 0
+        res = subprocess.run(["wpctl", "status"], capture_output=True, text=True, timeout=1).stdout
+        audio_sec = res.split("Video")[0] if "Video" in res else res
+        return "[active]" in audio_sec or "[running]" in audio_sec
     except Exception:
         return False
 
 def run_pulse_daemon():
-    print("[Shinsekai Pulse] Audio-reactive window border daemon started.", flush=True)
+    print("[Shinsekai Pulse] Audio-reactive window border daemon running (PipeWire / Hyprland Lua mode).", flush=True)
     angle = 45
-    step = 6
+    step = 8
     was_playing = False
     
     while True:
@@ -76,15 +76,15 @@ def run_pulse_daemon():
             sr, sg, sb = int(s_hex[1:3], 16), int(s_hex[3:5], 16), int(s_hex[5:7], 16)
             
             angle = (angle + step) % 360
-            border_val = f"rgba({pr:02x}{pg:02x}{pb:02x}ee) rgba({sr:02x}{sg:02x}{sb:02x}ee) {angle}deg"
-            subprocess.run(f"hyprctl keyword general:col.active_border '{border_val}' >/dev/null 2>&1", shell=True)
-            time.sleep(0.06) # Smooth 16 FPS rotation during music
+            lua_code = f'hl.config({{ general = {{ col = {{ active_border = {{ colors = {{ "rgba({pr:02x}{pg:02x}{pb:02x}ee)", "rgba({sr:02x}{sg:02x}{sb:02x}ee)" }}, angle = {angle} }} }} }} }})'
+            subprocess.run(["hyprctl", "eval", lua_code], capture_output=True)
+            time.sleep(0.05) # Smooth 20 FPS rotation during playback
         else:
             if was_playing:
                 reset_border()
                 was_playing = False
-            # Sleep at zero CPU when no audio is playing
-            time.sleep(0.8)
+            # Sleep at zero CPU when silent
+            time.sleep(0.6)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--reset":
