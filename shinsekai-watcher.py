@@ -11,6 +11,7 @@ BG_DIR = os.path.expanduser("~/.config/omarchy/themes/shinsekai/backgrounds")
 
 last_target = ""
 last_time_slot = ""
+was_shinsekai_active = True
 
 TIME_SLOTS = {
     "day": ["01-asuna-meadow-nature.png", "02-mitsuha-lake-nature.png", "04-frieren-field-4k.png", "05-violet-evergarden-8k.jpg", "08-weathering-with-you-8k.jpg"],
@@ -37,9 +38,21 @@ def get_config():
     return {"auto_cycle": False, "audio_reactive": False}
 
 def sync_theme():
-    global last_target
-    if not is_shinsekai_active():
+    global last_target, was_shinsekai_active
+    active = is_shinsekai_active()
+
+    if not active:
+        if was_shinsekai_active:
+            print("[Shinsekai Event] Switched away from Shinsekai theme. Deactivating all Shinsekai effects.", flush=True)
+            was_shinsekai_active = False
+            last_target = ""
+            subprocess.run(["hyprctl", "reload"], capture_output=True)
         return
+
+    if not was_shinsekai_active:
+        print("[Shinsekai Event] Shinsekai theme activated. Re-applying dynamic theme.", flush=True)
+        was_shinsekai_active = True
+        last_target = ""
 
     if os.path.exists(BG_LINK):
         try:

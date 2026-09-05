@@ -432,9 +432,10 @@ hl.config({{
     with open(os.path.join(theme_dir, "hyprland.lua"), "w") as f:
         f.write(hypr_lua)
         
-    looknfeel_path = os.path.expanduser("~/.config/hypr/looknfeel.lua")
-    with open(looknfeel_path, "w") as f:
-        f.write(hypr_lua)
+    active_theme_dir = os.path.expanduser("~/.local/state/omarchy/current/theme")
+    if os.path.exists(active_theme_dir) and is_shinsekai_active():
+        with open(os.path.join(active_theme_dir, "hyprland.lua"), "w") as f:
+            f.write(hypr_lua)
 
     # 9. Broadcast to Top Bar / QuickShell via IPC
     colors_payload = base64.b64encode(colors_toml.encode('utf-8')).decode('utf-8')

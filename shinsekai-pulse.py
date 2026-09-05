@@ -39,6 +39,9 @@ def is_pulse_enabled():
     return False
 
 def reset_border():
+    if not is_shinsekai_active():
+        subprocess.run(["hyprctl", "reload"], capture_output=True)
+        return
     p_hex, s_hex = get_theme_colors()
     pr, pg, pb = int(p_hex[1:3], 16), int(p_hex[3:5], 16), int(p_hex[5:7], 16)
     sr, sg, sb = int(s_hex[1:3], 16), int(s_hex[3:5], 16), int(s_hex[5:7], 16)
@@ -58,9 +61,24 @@ def run_pulse_daemon():
     angle = 45
     step = 8
     was_playing = False
+    was_active = is_shinsekai_active()
     
     while True:
-        if not is_shinsekai_active() or not is_pulse_enabled():
+        active = is_shinsekai_active()
+        
+        # When theme is switched away from Shinsekai to any other theme:
+        if not active:
+            if was_active or was_playing:
+                # Instantly restore the other theme's native configuration
+                subprocess.run(["hyprctl", "reload"], capture_output=True)
+                was_playing = False
+                was_active = False
+            time.sleep(2)
+            continue
+            
+        was_active = True
+        
+        if not is_pulse_enabled():
             if was_playing:
                 reset_border()
                 was_playing = False
