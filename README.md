@@ -308,3 +308,6 @@ Shinsekai ships with complete styling templates for all major tools:
 ## License
 
 Released under the **MIT License**. Free to use, modify, and distribute.
+
+### Artwork & Wallpaper Attribution
+All wallpapers curated in this repository belong to their respective original artists and animation studios (including CoMix Wave Films, Kyoto Animation, Studio Ghibli, Wit Studio, Ufotable, Trigger, etc.). They are included under non-commercial fair use for personal desktop customization. If you are an artist and wish to have your artwork specifically credited, linked, or removed, please open an issue and it will be handled promptly.
