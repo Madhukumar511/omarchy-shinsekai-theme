@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, time, subprocess, sys, select, ctypes, json, random, datetime
+import os, time, subprocess, sys, select, ctypes, json, random, datetime, colorsys, re
 
 # Zero CPU inotify event-driven watcher & background service manager
 SCRIPT = os.path.expanduser("~/.config/omarchy/themes/shinsekai/dynamic-theme.py")
@@ -12,12 +12,7 @@ BG_DIR = os.path.expanduser("~/.config/omarchy/themes/shinsekai/backgrounds")
 last_target = ""
 last_time_slot = ""
 was_shinsekai_active = True
-
-TIME_SLOTS = {
-    "day": ["01-asuna-meadow-nature.png", "02-mitsuha-lake-nature.png", "04-frieren-field-4k.png", "05-violet-evergarden-8k.jpg", "08-weathering-with-you-8k.jpg"],
-    "sunset": ["06-spirited-away-train-4k.jpg", "12-anime-sunset-horizon-4k.jpg", "09-wuthering-waves-chisa-4k.jpg"],
-    "night": ["03-columbina-snow-8k.jpg", "07-suzume-door-starry-4k.jpg", "10-edgerunners-moon-4k.jpg", "11-demon-slayer-wisteria-4k.jpg", "13-lord-of-mysteries-4k.jpg"]
-}
+classification_cache = {}
 
 def is_shinsekai_active():
     if os.path.exists(THEME_NAME_FILE):
@@ -36,6 +31,74 @@ def get_config():
         except Exception:
             pass
     return {"auto_cycle": False, "audio_reactive": False}
+
+def classify_wallpaper_time_slot(filename):
+    if filename in classification_cache:
+        return classification_cache[filename]
+        
+    path = os.path.join(BG_DIR, filename)
+    if not os.path.exists(path):
+        return "day"
+        
+    try:
+        cmd = f'magick "{path}" -resize 24x24! -format "%c" histogram:info:'
+        res = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=2).stdout
+        total_pixels = 0
+        total_lum = 0
+        warm_sunset_weight = 0
+
+        for line in res.strip().split('\n'):
+            if not line or ':' not in line: continue
+            parts = line.split(':')
+            count = int(parts[0].strip())
+            m = re.search(r'#([0-9a-fA-F]{6})', parts[1])
+            if not m: continue
+            hex_val = m.group(1)
+            r = int(hex_val[0:2], 16) / 255.0
+            g = int(hex_val[2:4], 16) / 255.0
+            b = int(hex_val[4:6], 16) / 255.0
+            h, s, v = colorsys.rgb_to_hsv(r, g, b)
+            lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
+            total_pixels += count
+            total_lum += lum * count
+
+            h_deg = h * 360
+            if (10 <= h_deg <= 55 or 320 <= h_deg <= 360) and s > 0.30 and 0.20 <= v <= 0.85:
+                warm_sunset_weight += count * s * v
+
+        avg_lum = total_lum / max(total_pixels, 1)
+        sunset_score = warm_sunset_weight / max(total_pixels, 1)
+
+        fn_lower = filename.lower()
+        if sunset_score > 0.12 or "sunset" in fn_lower or "horizon" in fn_lower or "twilight" in fn_lower:
+            slot = "sunset"
+        elif avg_lum >= 0.40:
+            slot = "day"
+        else:
+            slot = "night"
+    except Exception:
+        slot = "day"
+
+    classification_cache[filename] = slot
+    return slot
+
+def get_dynamic_time_slot_pools():
+    if not os.path.exists(BG_DIR):
+        return {"day": [], "sunset": [], "night": []}
+        
+    all_wallpapers = sorted([f for f in os.listdir(BG_DIR) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))])
+    
+    pools = {"day": [], "sunset": [], "night": []}
+    for f in all_wallpapers:
+        slot = classify_wallpaper_time_slot(f)
+        pools[slot].append(f)
+        
+    # If any slot is empty, fall back to all wallpapers so cycle never breaks
+    for k in pools:
+        if not pools[k] and all_wallpapers:
+            pools[k] = all_wallpapers
+            
+    return pools
 
 def sync_theme():
     global last_target, was_shinsekai_active
@@ -83,12 +146,12 @@ def check_time_of_day_cycle():
         
     if current_slot != last_time_slot:
         last_time_slot = current_slot
-        pool = TIME_SLOTS.get(current_slot, [])
-        existing = [f for f in pool if os.path.exists(os.path.join(BG_DIR, f))]
-        if existing:
-            chosen = random.choice(existing)
+        pools = get_dynamic_time_slot_pools()
+        pool = pools.get(current_slot, [])
+        if pool:
+            chosen = random.choice(pool)
             target_path = os.path.join(BG_DIR, chosen)
-            print(f"[Shinsekai Auto-Cycle] Time of day ({current_slot.upper()} {hour:02d}:00) -> {chosen}", flush=True)
+            print(f"[Shinsekai Auto-Cycle] Dynamic Classification -> Time of day ({current_slot.upper()} {hour:02d}:00) matched: {chosen}", flush=True)
             subprocess.run(f'omarchy theme bg set "{target_path}"', shell=True)
             subprocess.run([sys.executable, SCRIPT, target_path])
 

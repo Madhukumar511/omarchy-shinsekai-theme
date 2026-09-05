@@ -3,3 +3,5 @@
 *.bak
 .config.json
 .trash/
+__pycache__/
+*.pyc
