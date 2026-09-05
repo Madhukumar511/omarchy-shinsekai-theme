@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
-import subprocess, re, os, colorsys, sys, base64
+import subprocess, re, os, colorsys, sys, base64, json
 
 THEME_NAME_FILE = os.path.expanduser("~/.local/state/omarchy/current/theme.name")
+
+def load_config():
+    cfg_file = os.path.expanduser("~/.config/omarchy/themes/shinsekai/.config.json")
+    if os.path.exists(cfg_file):
+        try:
+            with open(cfg_file, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"dynamic_lock": True}
 
 def is_shinsekai_active():
     if os.path.exists(THEME_NAME_FILE):
@@ -268,28 +278,48 @@ deleted    = ""
 """
 
     # 7. Update Lock Screen Tokens (Hyprlock & Omarchy Shell Lock)
+    cfg = load_config()
+    dynamic_lock_enabled = cfg.get("dynamic_lock", True)
+
+    if dynamic_lock_enabled:
+        lock_border_active = primary['hex']
+        h_outer = p_hex_clean
+        h_accent = s_hex_clean
+        h_blur_passes = 3
+        h_blur_size = 8
+        h_vibrancy = 0.90
+        h_vibrancy_darkness = 0.25
+    else:
+        lock_border_active = "#334155"
+        h_outer = "334155"
+        h_accent = "475569"
+        h_blur_passes = 0
+        h_blur_size = 0
+        h_vibrancy = 0.0
+        h_vibrancy_darkness = 0.50
+
     shell_lock_toml = f"""text             = "#f8fafc"
 placeholder      = "#64748b"
 text-error       = "#ef4444"
 border           = "#1e293b"
-border-active    = "{primary['hex']}"
+border-active    = "{lock_border_active}"
 border-error     = "#ef4444"
 """
 
-    hyprlock_conf = f"""# Shinsekai (新世界) Dynamic Lock Screen
+    hyprlock_conf = f"""# Shinsekai (新世界) Lock Screen
 $color           = rgb(090D16)
 $inner_color     = rgba(9, 13, 22, 0.88)
-$outer_color     = rgb({p_hex_clean})
-$accent_color    = rgb({s_hex_clean})
+$outer_color     = rgb({h_outer})
+$accent_color    = rgb({h_accent})
 $font_color      = rgb(F8FAFC)
 $placeholder_color = rgba(248, 250, 252, 0.50)
-$check_color     = rgb({s_hex_clean})
+$check_color     = rgb({h_accent})
 
 background {{
-    blur_passes = 3
-    blur_size   = 8
-    vibrancy    = 0.90
-    vibrancy_darkness = 0.25
+    blur_passes = {h_blur_passes}
+    blur_size   = {h_blur_size}
+    vibrancy    = {h_vibrancy}
+    vibrancy_darkness = {h_vibrancy_darkness}
 }}
 """
 
@@ -319,7 +349,7 @@ background {{
                 try:
                     with open(shell_toml_path, "r") as sf:
                         st_content = sf.read()
-                    st_content = re.sub(r'(\[lock\][^\[]*?border-active\s*=\s*")[^"]*(")', rf'\g<1>{primary["hex"]}\g<2>', st_content)
+                    st_content = re.sub(r'(\[lock\][^\[]*?border-active\s*=\s*")[^"]*(")', rf'\g<1>{lock_border_active}\g<2>', st_content)
                     with open(shell_toml_path, "w") as sf:
                         sf.write(st_content)
                 except Exception:
