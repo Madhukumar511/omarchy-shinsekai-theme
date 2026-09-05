@@ -1,5 +1,5 @@
 -- Shinsekai Dynamic Anime Theme for Hyprland
-local active_border_color = { colors = { "rgba(67b3eaee)", "rgba(70e0a7ee)" }, angle = 45 }
+local active_border_color = { colors = { "rgba(ea4833ee)", "rgba(70cfe0ee)" }, angle = 45 }
 local inactive_border_color = "rgba(0f172a66)"
 
 hl.config({

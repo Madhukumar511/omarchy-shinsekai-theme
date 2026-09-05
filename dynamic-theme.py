@@ -282,6 +282,9 @@ deleted    = ""
     dynamic_lock_enabled = cfg.get("dynamic_lock", True)
 
     if dynamic_lock_enabled:
+        lock_background = "rgba(9, 13, 22, 0.70)"
+        lock_placeholder = primary['hex']
+        lock_border = f"rgba({primary['r']}, {primary['g']}, {primary['b']}, 0.50)"
         lock_border_active = primary['hex']
         h_outer = p_hex_clean
         h_accent = s_hex_clean
@@ -290,6 +293,9 @@ deleted    = ""
         h_vibrancy = 0.90
         h_vibrancy_darkness = 0.25
     else:
+        lock_background = "#090d16"
+        lock_placeholder = "#64748b"
+        lock_border = "#1e293b"
         lock_border_active = "#334155"
         h_outer = "334155"
         h_accent = "475569"
@@ -298,10 +304,12 @@ deleted    = ""
         h_vibrancy = 0.0
         h_vibrancy_darkness = 0.50
 
-    shell_lock_toml = f"""text             = "#f8fafc"
-placeholder      = "#64748b"
+    shell_lock_toml = f"""background       = "{lock_background}"
+background-alpha = 0.90
+text             = "#f8fafc"
+placeholder      = "{lock_placeholder}"
 text-error       = "#ef4444"
-border           = "#1e293b"
+border           = "{lock_border}"
 border-active    = "{lock_border_active}"
 border-error     = "#ef4444"
 """
@@ -350,6 +358,8 @@ background {{
                     with open(shell_toml_path, "r") as sf:
                         st_content = sf.read()
                     st_content = re.sub(r'(\[lock\][^\[]*?border-active\s*=\s*")[^"]*(")', rf'\g<1>{lock_border_active}\g<2>', st_content)
+                    st_content = re.sub(r'(\[lock\][^\[]*?border\s*=\s*")[^"]*(")', rf'\g<1>{lock_border}\g<2>', st_content)
+                    st_content = re.sub(r'(\[lock\][^\[]*?placeholder\s*=\s*")[^"]*(")', rf'\g<1>{lock_placeholder}\g<2>', st_content)
                     with open(shell_toml_path, "w") as sf:
                         sf.write(st_content)
                 except Exception:
@@ -439,7 +449,15 @@ hl.config({{
 
     # 9. Broadcast to Top Bar / QuickShell via IPC
     colors_payload = base64.b64encode(colors_toml.encode('utf-8')).decode('utf-8')
-    subprocess.run(f"omarchy-shell -q shell applyTheme '{colors_payload}' '' >/dev/null 2>&1", shell=True)
+    shell_payload = ""
+    active_shell_toml = os.path.expanduser("~/.local/state/omarchy/current/theme/shell.toml")
+    if os.path.exists(active_shell_toml):
+        try:
+            with open(active_shell_toml, "r") as sf:
+                shell_payload = base64.b64encode(sf.read().encode('utf-8')).decode('utf-8')
+        except Exception:
+            pass
+    subprocess.run(f"omarchy-shell -q shell applyTheme '{colors_payload}' '{shell_payload}' >/dev/null 2>&1", shell=True)
 
     # 10. Update Browser, Terminal, Templates & Hyprland
     subprocess.run("omarchy-theme-set-browser >/dev/null 2>&1", shell=True)
