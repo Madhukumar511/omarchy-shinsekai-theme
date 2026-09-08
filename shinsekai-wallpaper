@@ -147,7 +147,7 @@ def toggle_auto_cycle(state=None):
         slot = "Day (07:00-17:00)" if 7 <= hour < 17 else ("Sunset (17:00-20:00)" if 17 <= hour < 20 else "Night (20:00-07:00)")
         print(f"\n\033[1;36m🕒 Day/Night Auto-Cycling:\033[0m {status_str}")
         print(f"\033[2mCurrent Time Slot: {slot} (Local Hour: {hour:02d}:00)\033[0m")
-        print("\033[2mType 'shin-bg auto on' to enable or 'shin-bg auto off' to disable.\033[0m\n")
+        print("\033[2mType 'shin auto on' to enable or 'shin auto off' to disable.\033[0m\n")
         return
 
     cfg["auto_cycle"] = new_state
@@ -172,7 +172,7 @@ def toggle_pulse(state=None):
     else:
         status_str = "\033[1;32mENABLED\033[0m" if cfg.get("audio_reactive", False) else "\033[1;31mDISABLED\033[0m"
         print(f"\n\033[1;36m🎵 Audio-Reactive Window Borders:\033[0m {status_str}")
-        print("\033[2mType 'shin-bg pulse on' to enable or 'shin-bg pulse off' to disable.\033[0m\n")
+        print("\033[2mType 'shin pulse on' to enable or 'shin pulse off' to disable.\033[0m\n")
         return
 
     cfg["audio_reactive"] = new_state
@@ -203,7 +203,7 @@ def toggle_lock(state=None):
     else:
         status_str = "\033[1;32mENABLED (Dynamic Accent Glow & Frosted Glass)\033[0m" if curr else "\033[1;31mDISABLED (Neutral Minimal Dark)\033[0m"
         print(f"\n\033[1;36m🔒 Lock Screen Dynamic Theming:\033[0m {status_str}")
-        print("\033[2mCommands: 'shin-bg lock on' | 'shin-bg lock off' | 'shin-bg lock preview'\033[0m\n")
+        print("\033[2mCommands: 'shin lock on' | 'shin lock off' | 'shin lock preview'\033[0m\n")
         return
 
     cfg["dynamic_lock"] = new_state
@@ -219,7 +219,7 @@ def toggle_lock(state=None):
     else:
         print("\033[1;33m🛑 Lock Screen Dynamic Theming is now OFF.\033[0m")
         print("\033[2mLockscreen switched to neutral minimal dark aesthetic without wallpaper accent glow.\033[0m")
-    print("\033[2m💡 Tip: Type \033[1;36mshin-bg lock preview\033[0m\033[2m to preview the lockscreen right now without locking!\033[0m\n")
+    print("\033[2m💡 Tip: Type \033[1;36mshin lock preview\033[0m\033[2m to preview the lockscreen right now without locking!\033[0m\n")
 
 def rename_wallpaper(target, new_name):
     if not target or not new_name:
@@ -278,7 +278,7 @@ def add_wallpaper(source, custom_name=None):
         print("\033[1;31m❌ Error: Please provide an image URL or local file path.\033[0m")
         return
 
-    source = re.sub(r'^(shin-bg|shinsekai-wallpaper|shinsekai)\s+(add\s+)?', '', source).strip().strip("'\"")
+    source = re.sub(r'^(shin|shin-bg|shinsekai-wallpaper|shinsekai)\s+(add\s+)?', '', source).strip().strip("'\"")
 
     os.makedirs(BG_DIR, exist_ok=True)
     temp_file = "/tmp/shinsekai_temp_download"
@@ -298,10 +298,10 @@ def add_wallpaper(source, custom_name=None):
   You pasted a website page URL instead of the direct image file.
   \033[1;32m👉 Right-click the image in your browser\033[0m and choose:
      \033[1m• 'Copy image address'\033[0m (or 'Copy image link')
-  Then paste it into \033[1;36mshin-bg\033[0m!
+  Then paste it into \033[1;36mshin\033[0m!
 
   \033[1;32m👉 Or download the image to ~/Downloads and run:\033[0m
-     \033[1;36mshin-bg add ~/Downloads/my-image.jpg [character-name]\033[0m
+     \033[1;36mshin add ~/Downloads/my-image.jpg [character-name]\033[0m
 """)
             return
     else:
@@ -430,7 +430,7 @@ def remove_wallpaper(target):
     refresh_wallpaper_cache()
 
     print(f"\033[1;32m🗑️ Moved to recovery trash:\033[0m {to_delete}")
-    print(f"\033[2m💡 Mistake? Type \033[1;36mshin-bg restore {to_delete[:2]}\033[0m\033[2m or \033[1;36mshin-bg undo\033[0m\033[2m anytime to restore it!\033[0m")
+    print(f"\033[2m💡 Mistake? Type \033[1;36mshin restore {to_delete[:2]}\033[0m\033[2m or \033[1;36mshin undo\033[0m\033[2m anytime to restore it!\033[0m")
     subprocess.run("omarchy theme bg next 2>/dev/null || true", shell=True)
 
 def restore_wallpaper(target=None):
@@ -495,7 +495,7 @@ def list_trash():
         ago = int((time.time() - item.get("deleted_at", time.time())) / 60)
         ago_str = f"{ago}m ago" if ago > 0 else "just now"
         print(f"  \033[1;33m[{fn[:2]}]\033[0m {fn:<38} \033[2m(Deleted {ago_str})\033[0m")
-    print(f"\n\033[2mRun \033[1;36mshin-bg restore <number>\033[0m\033[2m to restore any item.\033[0m\n")
+    print(f"\n\033[2mRun \033[1;36mshin restore <number>\033[0m\033[2m to restore any item.\033[0m\n")
 
 def set_wallpaper(target):
     files = get_all_wallpapers()
@@ -545,7 +545,7 @@ def parse_and_execute(cmd_line):
     if not parts:
         return
 
-    if parts[0] in ["shin-bg", "shinsekai-wallpaper", "shinsekai"]:
+    if parts[0] in ["shin", "shin-bg", "shinsekai-wallpaper", "shinsekai"]:
         parts = parts[1:]
         if not parts:
             print_commands_menu()
@@ -626,7 +626,7 @@ def interactive_loop():
 
     while True:
         try:
-            line = input("\033[1;36mshin-bg > \033[0m").strip()
+            line = input("\033[1;36mshin > \033[0m").strip()
             if not line:
                 continue
             parse_and_execute(line)

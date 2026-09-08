@@ -105,27 +105,27 @@ Users can freely add as many custom 4K wallpapers as they want (`[01-N]`) using 
 
 ---
 
-## Wallpaper Manager CLI (`shin-bg`)
+## Wallpaper Manager CLI (`shin` / `shin-bg`)
 
-Shinsekai includes a custom terminal tool to download, inspect quality, and manage wallpapers from any terminal location (`no cd required`).
+Shinsekai includes a fast terminal CLI tool `shin` (or `shin-bg`) to download, inspect quality, toggle effects, and manage wallpapers from any terminal location (`no cd required`).
 
 ### CLI Commands Reference
 
 | Command | Action | Example |
 | :--- | :--- | :--- |
-| `shin-bg` | Open interactive manager with clipboard link detector | `shin-bg` |
-| `shin-bg list` | View all installed wallpapers with assigned numbers `[01-N]` | `shin-bg list` |
-| `shin-bg set <number>` | Switch active wallpaper by number (auto-pauses cycling) | `shin-bg set 4` |
-| `shin-bg add <url-or-path> [name]` | Download 4K/8K wallpaper & auto-assign next number | `shin-bg add <link> solo-leveling` |
-| `shin-bg rename <num> <name>` | Rename wallpaper while preserving index order | `shin-bg rename 13 lord-of-mysteries` |
-| `shin-bg auto [on\|off\|status]` | Toggle Day/Night time-of-day auto wallpaper transitions | `shin-bg auto on` |
-| `shin-bg pulse [on\|off\|status]` | Toggle music-reactive audio glowing window borders | `shin-bg pulse on` |
-| `shin-bg lock [on\|off\|status]` | Toggle dynamic lockscreen blur & accent border sync | `shin-bg lock off` |
-| `shin-bg remove <number>` | Safely move wallpaper to recovery trash | `shin-bg remove 13` |
-| `shin-bg restore [number]` | Undo / Restore deleted wallpaper | `shin-bg undo` or `shin-bg restore 13` |
-| `shin-bg trash` | View deleted wallpapers in recovery trash | `shin-bg trash` |
-| `shin-bg next` | Cycle to next wallpaper | `shin-bg next` |
-| `shin-bg current` | Show currently active wallpaper | `shin-bg current` |
+| `shin` (or `shin-bg`) | Open interactive manager with clipboard link detector | `shin` |
+| `shin list` | View all installed wallpapers with assigned numbers `[01-N]` | `shin list` |
+| `shin set <number>` | Switch active wallpaper by number (auto-pauses cycling) | `shin set 4` |
+| `shin add <url-or-path> [name]` | Download 4K/8K wallpaper & auto-assign next number | `shin add <link> solo-leveling` |
+| `shin rename <num> <name>` | Rename wallpaper while preserving index order | `shin rename 13 lord-of-mysteries` |
+| `shin auto [on\|off\|status]` | Toggle Day/Night time-of-day auto wallpaper transitions | `shin auto on` |
+| `shin pulse [on\|off\|status]` | Toggle music-reactive audio glowing window borders | `shin pulse on` |
+| `shin lock [on\|off\|status]` | Toggle dynamic lockscreen blur & accent border sync | `shin lock off` |
+| `shin remove <number>` | Safely move wallpaper to recovery trash | `shin remove 13` |
+| `shin restore [number]` | Undo / Restore deleted wallpaper | `shin undo` or `shin restore 13` |
+| `shin trash` | View deleted wallpapers in recovery trash | `shin trash` |
+| `shin next` | Cycle to next wallpaper | `shin next` |
+| `shin current` | Show currently active wallpaper | `shin current` |
 
 ---
 
@@ -133,8 +133,8 @@ Shinsekai includes a custom terminal tool to download, inspect quality, and mana
 
 If you accidentally delete a wallpaper:
 - Removed wallpapers are moved to `.trash/` instead of permanent deletion.
-- Run **`shin-bg undo`** to immediately restore the last deleted wallpaper.
-- Or run **`shin-bg restore <number>`** to recover a specific wallpaper number.
+- Run **`shin undo`** to immediately restore the last deleted wallpaper.
+- Or run **`shin restore <number>`** to recover a specific wallpaper number.
 
 ---
 
@@ -146,13 +146,13 @@ Shinsekai integrates directly with both Omarchy's lock screen (`omarchy-shell`) 
 - **Toggle Mode Anytime**:
   ```bash
   # Enable dynamic wallpaper blur & glowing accent border
-  shin-bg lock on
+  shin lock on
 
   # Disable to use clean neutral minimal dark lockscreen
-  shin-bg lock off
+  shin lock off
 
   # Check current lockscreen dynamic state
-  shin-bg lock status
+  shin lock status
   ```
 
 ---
@@ -166,15 +166,15 @@ Shinsekai can automatically transition between anime atmospheres according to yo
 
 ```bash
 # Enable auto-cycling
-shin-bg auto on
+shin auto on
 
 # Disable auto-cycling (keeps your current wallpaper)
-shin-bg auto off
+shin auto off
 
 # Check current time-slot and auto-cycle status
-shin-bg auto status
+shin auto status
 ```
-> **Smart Pause:** Selecting any wallpaper manually via `shin-bg set <number>` or `SUPER + CTRL + SPACE` automatically pauses auto-cycling so your custom choice is never overwritten.
+> **Smart Pause:** Selecting any wallpaper manually via `shin set <number>` or `SUPER + CTRL + SPACE` automatically pauses auto-cycling so your custom choice is never overwritten.
 
 ---
 
@@ -187,13 +187,13 @@ Turn your window borders into a live audio visualizer:
 
 ```bash
 # Turn on audio-reactive window borders
-shin-bg pulse on
+shin pulse on
 
 # Turn off audio-reactive borders (returns to static gradient)
-shin-bg pulse off
+shin pulse off
 
 # Check status
-shin-bg pulse status
+shin pulse status
 ```
 
 ---
@@ -232,7 +232,7 @@ Then enable the background color sync daemon and CLI tool:
 
 ```bash
 mkdir -p ~/.config/systemd/user ~/.local/bin
-ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shinsekai-wallpaper
+ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shin
 ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shin-bg
 ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shinsekai
 
@@ -268,9 +268,9 @@ git clone https://github.com/Madhukumar511/omarchy-shinsekai-theme.git ~/.config
 # 2. Activate theme in Omarchy
 omarchy theme set shinsekai
 
-# 3. Setup Wallpaper Manager CLI
+# 3. Setup Wallpaper Manager CLI (shin)
 mkdir -p ~/.local/bin
-ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shinsekai-wallpaper
+ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shin
 ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shin-bg
 ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shinsekai
 
@@ -315,10 +315,10 @@ After installation, cycle through wallpapers and watch your entire desktop dynam
 
 ```bash
 # Cycle to next wallpaper
-shin-bg next
+shin next
 
 # List all wallpapers
-shin-bg list
+shin list
 ```
 
 Or press **`SUPER + CTRL + SPACE`** on your keyboard to open the visual thumbnail picker.
