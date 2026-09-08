@@ -1,8 +1,8 @@
 @define-color background #090d16;
 @define-color foreground #f8fafc;
-@define-color selected-background #ea4833;
+@define-color selected-background #67b3ea;
 @define-color selected-foreground #090d16;
-@define-color border #ea4833;
+@define-color border #67b3ea;
 
 #window {
   background-color: transparent;
@@ -18,7 +18,7 @@
 
 #search {
   background-color: #0f172a;
-  border: 1px solid alpha(#ea4833, 0.4);
+  border: 1px solid alpha(#67b3ea, 0.4);
   border-radius: 8px;
   color: @foreground;
   padding: 10px;
