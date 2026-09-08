@@ -124,6 +124,7 @@ Shinsekai includes a fast terminal CLI tool `shin` (or `shin-bg`) to download, i
 | `shin remove <number>` | Safely move wallpaper to recovery trash | `shin remove 13` |
 | `shin restore [number]` | Undo / Restore deleted wallpaper | `shin undo` or `shin restore 13` |
 | `shin trash` | View deleted wallpapers in recovery trash | `shin trash` |
+| `shin update` | Update Shinsekai theme & CLI to latest version from GitHub | `shin update` |
 | `shin next` | Cycle to next wallpaper | `shin next` |
 | `shin current` | Show currently active wallpaper | `shin current` |
 
