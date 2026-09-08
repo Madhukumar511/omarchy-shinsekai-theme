@@ -24,9 +24,9 @@ def save_config(cfg):
 
 def print_banner():
     cfg = load_config()
-    auto_status = "\033[1;32mON\033[0m" if cfg.get("auto_cycle", False) else "\033[1;30mOFF\033[0m"
-    pulse_status = "\033[1;32mON\033[0m" if cfg.get("audio_reactive", False) else "\033[1;30mOFF\033[0m"
-    lock_status = "\033[1;32mDYNAMIC\033[0m" if cfg.get("dynamic_lock", True) else "\033[1;30mNEUTRAL\033[0m"
+    auto_status = "\033[1;32mON\033[0m" if cfg.get("auto_cycle", False) else "\033[1;31mOFF\033[0m"
+    pulse_status = "\033[1;32mON\033[0m" if cfg.get("audio_reactive", False) else "\033[1;31mOFF\033[0m"
+    lock_status = "\033[1;32mDYNAMIC\033[0m" if cfg.get("dynamic_lock", True) else "\033[1;33mNEUTRAL\033[0m"
     
     print(f"""
 \033[1;36m🌸 Shinsekai Wallpaper Manager\033[0m
