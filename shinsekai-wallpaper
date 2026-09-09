@@ -308,8 +308,13 @@ def add_wallpaper(source, custom_name=None):
     else:
         src_path = os.path.expanduser(clean_source)
         if not os.path.exists(src_path):
-            print(f"\033[1;31m❌ Local file not found: {src_path}\033[0m")
-            return
+            downloads_path = os.path.join(os.path.expanduser("~/Downloads"), clean_source)
+            if os.path.exists(downloads_path):
+                src_path = downloads_path
+            else:
+                print(f"\033[1;31m❌ Local file not found: {src_path}\033[0m")
+                print(f"\033[2m(Checked both '{src_path}' and '{downloads_path}')\033[0m")
+                return
         shutil.copy2(src_path, temp_file)
 
     w, h, fmt, size = get_image_info(temp_file)
