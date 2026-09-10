@@ -14,19 +14,53 @@ def is_shinsekai_active():
             pass
     return False
 
+_cached_colors = ("#eed132", "#55e064")
+_last_mtime = 0
+
 def get_theme_colors():
-    p_hex, s_hex = "#2cf535", "#b528e0"
-    if os.path.exists(COLORS_FILE):
-        try:
-            with open(COLORS_FILE, "r") as f:
-                content = f.read()
-                m_acc = re.search(r'accent\s*=\s*\"(#[0-9a-fA-F]{6})\"', content)
-                m_cur = re.search(r'cursor\s*=\s*\"(#[0-9a-fA-F]{6})\"', content)
-                if m_acc: p_hex = m_acc.group(1)
-                if m_cur: s_hex = m_cur.group(1)
-        except Exception:
-            pass
-    return p_hex, s_hex
+    global _cached_colors, _last_mtime
+    candidates = [
+        os.path.expanduser("~/.local/state/omarchy/current/theme/colors.toml"),
+        os.path.expanduser("~/.config/omarchy/themes/shinsekai/colors.toml"),
+    ]
+    
+    target_file = None
+    for path in candidates:
+        if os.path.exists(path) and os.path.getsize(path) > 0:
+            target_file = path
+            break
+            
+    if not target_file:
+        return _cached_colors
+        
+    try:
+        mtime = os.path.getmtime(target_file)
+        if mtime == _last_mtime:
+            return _cached_colors
+            
+        with open(target_file, "r") as f:
+            content = f.read()
+            
+        p_hex, s_hex = None, None
+        
+        # Check hyprland_active_border first
+        m_border = re.search(r'hyprland_active_border\s*=\s*\"(#[0-9a-fA-F]{6})\s+(#[0-9a-fA-F]{6})', content)
+        if m_border:
+            p_hex = m_border.group(1)
+            s_hex = m_border.group(2)
+        else:
+            m_acc = re.search(r'accent\s*=\s*\"(#[0-9a-fA-F]{6})\"', content)
+            m_cur = re.search(r'cursor\s*=\s*\"(#[0-9a-fA-F]{6})\"', content)
+            if m_acc: p_hex = m_acc.group(1)
+            if m_cur: s_hex = m_cur.group(1)
+            
+        if p_hex and s_hex:
+            _cached_colors = (p_hex, s_hex)
+            _last_mtime = mtime
+    except Exception:
+        pass
+        
+    return _cached_colors
 
 def is_pulse_enabled():
     if os.path.exists(CONFIG_FILE):

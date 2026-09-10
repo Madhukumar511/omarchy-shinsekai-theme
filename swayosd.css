@@ -1,9 +1,9 @@
 /* Shinsekai SwayOSD Volume & Brightness UI */
 @define-color background-color #090d16;
-@define-color border-color #67b3ea;
+@define-color border-color #eed132;
 @define-color label #f8fafc;
-@define-color image #67b3ea;
-@define-color progress #67b3ea;
+@define-color image #eed132;
+@define-color progress #eed132;
 
 window {
   border-radius: 14px;

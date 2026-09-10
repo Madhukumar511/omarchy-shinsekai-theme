@@ -438,6 +438,7 @@ hl.config({{
   }},
 }})
 """
+    # 8. Update Hyprland Look & Feel
     theme_dir = os.path.expanduser("~/.config/omarchy/themes/shinsekai")
     with open(os.path.join(theme_dir, "hyprland.lua"), "w") as f:
         f.write(hypr_lua)
@@ -445,6 +446,11 @@ hl.config({{
     active_theme_dir = os.path.expanduser("~/.local/state/omarchy/current/theme")
     if os.path.exists(active_theme_dir) and is_shinsekai_active():
         with open(os.path.join(active_theme_dir, "hyprland.lua"), "w") as f:
+            f.write(hypr_lua)
+
+    user_looknfeel = os.path.expanduser("~/.config/hypr/looknfeel.lua")
+    if os.path.exists(user_looknfeel) and is_shinsekai_active():
+        with open(user_looknfeel, "w") as f:
             f.write(hypr_lua)
 
     # 9. Broadcast to Top Bar / QuickShell via IPC
@@ -459,7 +465,7 @@ hl.config({{
             pass
     subprocess.run(f"omarchy-shell -q shell applyTheme '{colors_payload}' '{shell_payload}' >/dev/null 2>&1", shell=True)
 
-    # 10. Update Browser, Terminal, Templates & Hyprland
+    # 10. Update Browser, Terminal, Templates, Hyprland & Pulse Daemon
     subprocess.run("omarchy-theme-set-browser >/dev/null 2>&1", shell=True)
     subprocess.run("brave --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
     subprocess.run("chromium --refresh-platform-policy --no-startup-window >/dev/null 2>&1 &", shell=True)
@@ -467,6 +473,12 @@ hl.config({{
     subprocess.run("omarchy-theme-set-foot >/dev/null 2>&1", shell=True)
     subprocess.run("omarchy-restart-terminal >/dev/null 2>&1", shell=True)
     subprocess.run("hyprctl reload >/dev/null 2>&1", shell=True)
+    
+    # Refresh pulse daemon borders / service if running
+    pulse_script = os.path.join(theme_dir, "shinsekai-pulse.py")
+    if os.path.exists(pulse_script):
+        subprocess.run(f"python3 {pulse_script} --reset >/dev/null 2>&1", shell=True)
+    subprocess.run("systemctl --user try-restart shinsekai-pulse.service >/dev/null 2>&1", shell=True)
     
     print(f"[Shinsekai Dynamic] Synchronized All UI & Lockscreen: {os.path.basename(image_path)} -> Primary: {primary['hex']} | Secondary: {secondary['hex']}", flush=True)
 
