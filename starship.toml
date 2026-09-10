@@ -4,21 +4,21 @@ format = "[$directory$git_branch$git_status]($style)$character"
 
 [character]
 error_symbol = "[✗](bold #ef4444)"
-success_symbol = "[❯](bold #eed132)"
+success_symbol = "[❯](bold #529eea)"
 
 [directory]
 truncation_length = 2
 truncation_symbol = "…/"
-repo_root_style = "bold #eed132"
+repo_root_style = "bold #529eea"
 repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
 format = "[$branch]($style) "
-style = "italic #55e064"
+style = "italic #e09163"
 
 [git_status]
 format     = '[$all_status]($style)'
-style      = "#eed132"
+style      = "#529eea"
 ahead      = "⇡${count} "
 diverged   = "⇕⇡${ahead_count}⇣${behind_count} "
 behind     = "⇣${count} "

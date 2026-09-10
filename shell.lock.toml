@@ -1,8 +1,8 @@
 background       = "rgba(9, 13, 22, 0.70)"
 background-alpha = 0.90
 text             = "#f8fafc"
-placeholder      = "#eed132"
+placeholder      = "#529eea"
 text-error       = "#ef4444"
-border           = "rgba(238, 209, 50, 0.50)"
-border-active    = "#eed132"
+border           = "rgba(82, 158, 234, 0.50)"
+border-active    = "#529eea"
 border-error     = "#ef4444"

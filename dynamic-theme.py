@@ -331,6 +331,142 @@ background {{
 }}
 """
 
+    shell_toml = f"""# Omarchy shell surfaces. Colors derive from colors.toml; sizes and the
+# typographic scale come from the keys below. Themes can ship
+# themes/<name>/shell.toml to replace this generated file.
+
+[bar]
+background       = "#090d16"
+background-alpha = 1.0
+text             = "#f8fafc"
+active           = "#ef4444"
+scale-with-font  = true
+size-horizontal  = 26
+size-vertical    = 28
+
+[hyprland]
+active-border            = "{primary['hex']} {secondary['hex']} 45deg"
+active-border-foreground = "{primary['hex']} {secondary['hex']} 45deg"
+
+[controls]
+normal-color        = "#f8fafc"
+normal-fill-alpha   = 0.04
+normal-border       = "#f8fafc"
+normal-border-width = 1
+normal-border-alpha = 0.4
+
+hover-cursor-color        = "#f8fafc"
+hover-cursor-fill-alpha   = 0.08
+hover-cursor-border       = "#f8fafc"
+hover-cursor-border-width = 1
+hover-cursor-border-alpha = 0.25
+
+focus-color        = "#f8fafc"
+focus-fill-alpha   = 0.08
+focus-border       = "#f8fafc"
+focus-border-width = 1
+focus-border-alpha = 0.25
+
+selected-color        = "#f8fafc"
+selected-fill-alpha   = 0.18
+selected-border       = "#f8fafc"
+selected-border-width = 0
+selected-border-alpha = 1.0
+
+pressed-fill-alpha   = 0.22
+selection-fill-alpha = 0.35
+
+[spacing]
+scale = 1.0
+scale-with-font = true
+
+[font]
+base-size = 12
+
+[popups]
+background       = "#090d16"
+background-alpha = 1.0
+text             = "#f8fafc"
+border           = "hyprland.active-border"
+border-alpha     = 1.0
+
+[tooltip]
+background       = "#090d16"
+background-alpha = 0.97
+text             = "#f8fafc"
+border           = "hyprland.active-border-foreground"
+border-alpha     = 1.0
+
+[notifications]
+background       = "#090d16"
+background-alpha = 1.0
+text             = "#f8fafc"
+border           = "hyprland.active-border"
+border-alpha     = 1.0
+countdown        = "{primary['hex']}"
+
+[launcher]
+background                = "#090d16"
+background-alpha          = 0.95
+text                      = "#f8fafc"
+border                    = "hyprland.active-border-foreground"
+border-alpha              = 1.0
+scrim                     = "#090d16"
+scrim-alpha               = 0.5
+selected-background       = "#f8fafc"
+selected-background-alpha = 0.08
+selected-text             = "{primary['hex']}"
+selected-border           = "hyprland.active-border-foreground"
+selected-border-alpha     = 0.25
+
+[menu]
+background                = "#090d16"
+background-alpha          = 1.0
+text                      = "#f8fafc"
+border                    = "hyprland.active-border-foreground"
+border-alpha              = 1.0
+scrim                     = "#090d16"
+scrim-alpha               = 0.5
+selected-background       = "#f8fafc"
+selected-background-alpha = 0.08
+selected-text             = "{primary['hex']}"
+selected-border           = "hyprland.active-border-foreground"
+selected-border-alpha     = 0.25
+
+[polkit]
+background       = "#090d16"
+background-alpha = 1.0
+text             = "#f8fafc"
+text-error       = "#ef4444"
+border           = "hyprland.active-border"
+border-error     = "#ef4444"
+border-alpha     = 1.0
+scrim            = "#090d16"
+scrim-alpha      = 0.5
+accent           = "{primary['hex']}"
+
+[lock]
+background       = "{lock_background}"
+background-alpha = 0.90
+text             = "#f8fafc"
+placeholder      = "{lock_placeholder}"
+text-error       = "#ef4444"
+border           = "{lock_border}"
+border-active    = "{lock_border_active}"
+border-error     = "#ef4444"
+selection        = "{primary['hex']}"
+selection-alpha  = 0.45
+
+[image-picker]
+scrim                   = "#090d16"
+scrim-alpha             = 0.5
+text                    = "#f8fafc"
+selected-border         = "{primary['hex']}"
+selected-border-alpha   = 1.0
+unselected-border       = "#f8fafc"
+unselected-border-alpha = 0.28
+"""
+
     # Write configs across directories
     for d in theme_dirs:
         if os.path.exists(d):
@@ -338,6 +474,8 @@ background {{
                 f.write(rgb_str)
             with open(os.path.join(d, "colors.toml"), "w") as f:
                 f.write(colors_toml)
+            with open(os.path.join(d, "shell.toml"), "w") as f:
+                f.write(shell_toml)
             with open(os.path.join(d, "swayosd.css"), "w") as f:
                 f.write(swayosd_css)
             with open(os.path.join(d, "foot.ini"), "w") as f:
@@ -350,20 +488,6 @@ background {{
                 f.write(shell_lock_toml)
             with open(os.path.join(d, "hyprlock.conf"), "w") as f:
                 f.write(hyprlock_conf)
-
-            # Keep shell.toml in sync if present
-            shell_toml_path = os.path.join(d, "shell.toml")
-            if os.path.exists(shell_toml_path):
-                try:
-                    with open(shell_toml_path, "r") as sf:
-                        st_content = sf.read()
-                    st_content = re.sub(r'(\[lock\][^\[]*?border-active\s*=\s*")[^"]*(")', rf'\g<1>{lock_border_active}\g<2>', st_content)
-                    st_content = re.sub(r'(\[lock\][^\[]*?border\s*=\s*")[^"]*(")', rf'\g<1>{lock_border}\g<2>', st_content)
-                    st_content = re.sub(r'(\[lock\][^\[]*?placeholder\s*=\s*")[^"]*(")', rf'\g<1>{lock_placeholder}\g<2>', st_content)
-                    with open(shell_toml_path, "w") as sf:
-                        sf.write(st_content)
-                except Exception:
-                    pass
 
     # Also update user live configs
     user_swayosd = os.path.expanduser("~/.config/swayosd/style.css")
