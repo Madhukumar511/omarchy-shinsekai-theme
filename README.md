@@ -79,29 +79,80 @@ Users can freely add as many custom 4K wallpapers as they want (`[01-N]`) using 
 
 ## Wallpaper Gallery (12 Default Masterpieces)
 
-| 01. Sword Art Online — Asuna Sunlit Meadow (4K) | 02. Your Name — Mitsuha Lake Itomori Sunset (4K) |
-| :---: | :---: |
-| <img src="backgrounds/01-asuna-meadow-nature.webp" width="380" alt="Asuna Meadow"> | <img src="backgrounds/02-mitsuha-lake-nature.webp" width="380" alt="Mitsuha Lake"> |
-
-| 03. Genshin Impact — Columbina Celestial Snow (8K) | 04. Frieren — Blue Flower Field (4K) |
-| :---: | :---: |
-| <img src="backgrounds/03-columbina-snow-8k.jpg" width="380" alt="Columbina Snow"> | <img src="backgrounds/04-frieren-field-4k.png" width="380" alt="Frieren Field"> |
-
-| 05. Violet Evergarden — Water Meadow (8K) | 06. Spirited Away — Sea Railway Train (4K) |
-| :---: | :---: |
-| <img src="backgrounds/05-violet-evergarden-8k.webp" width="380" alt="Violet Evergarden"> | <img src="backgrounds/06-spirited-away-train-4k.webp" width="380" alt="Spirited Away Train"> |
-
-| 07. Suzume — Cosmic Starry Twilight (4K) | 08. Weathering With You — Sunshine Clouds (8K) |
-| :---: | :---: |
-| <img src="backgrounds/07-suzume-door-starry-4k.webp" width="380" alt="Suzume Door"> | <img src="backgrounds/08-weathering-with-you-8k.jpg" width="380" alt="Weathering With You"> |
-
-| 09. Wuthering Waves — Chisa's Crimson Reach (4K) | 10. Cyberpunk Edgerunners — Moon Skyline (5K) |
-| :---: | :---: |
-| <img src="backgrounds/09-wuthering-waves-chisa-4k.jpg" width="380" alt="Chisa Crimson Reach"> | <img src="backgrounds/10-edgerunners-moon-4k.jpg" width="380" alt="Edgerunners Moon"> |
-
-| 11. Demon Slayer — Wisteria Mountain (4K) | 12. Anime Scenery — Twilight Horizon (4K) |
-| :---: | :---: |
-| <img src="backgrounds/11-demon-slayer-wisteria-4k.jpg" width="380" alt="Demon Slayer Wisteria"> | <img src="backgrounds/12-anime-sunset-horizon-4k.jpg" width="380" alt="Twilight Horizon"> |
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <b>01. Sword Art Online — Asuna Sunlit Meadow (4K)</b>
+      <br><br>
+      <img src="backgrounds/01-asuna-meadow-nature.webp" width="100%" alt="Asuna Meadow">
+    </td>
+    <td width="50%" align="center">
+      <b>02. Your Name — Mitsuha Lake Itomori Sunset (4K)</b>
+      <br><br>
+      <img src="backgrounds/02-mitsuha-lake-nature.webp" width="100%" alt="Mitsuha Lake">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <b>03. Genshin Impact — Columbina Celestial Snow (8K)</b>
+      <br><br>
+      <img src="backgrounds/03-columbina-snow-8k.jpg" width="100%" alt="Columbina Snow">
+    </td>
+    <td width="50%" align="center">
+      <b>04. Frieren — Blue Flower Field (4K)</b>
+      <br><br>
+      <img src="backgrounds/04-frieren-field-4k.png" width="100%" alt="Frieren Field">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <b>05. Violet Evergarden — Water Meadow (8K)</b>
+      <br><br>
+      <img src="backgrounds/05-violet-evergarden-8k.webp" width="100%" alt="Violet Evergarden">
+    </td>
+    <td width="50%" align="center">
+      <b>06. Spirited Away — Sea Railway Train (4K)</b>
+      <br><br>
+      <img src="backgrounds/06-spirited-away-train-4k.webp" width="100%" alt="Spirited Away Train">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <b>07. Suzume — Cosmic Starry Twilight (4K)</b>
+      <br><br>
+      <img src="backgrounds/07-suzume-door-starry-4k.webp" width="100%" alt="Suzume Door">
+    </td>
+    <td width="50%" align="center">
+      <b>08. Weathering With You — Sunshine Clouds (8K)</b>
+      <br><br>
+      <img src="backgrounds/08-weathering-with-you-8k.jpg" width="100%" alt="Weathering With You">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <b>09. Wuthering Waves — Chisa's Crimson Reach (4K)</b>
+      <br><br>
+      <img src="backgrounds/09-wuthering-waves-chisa-4k.jpg" width="100%" alt="Chisa Crimson Reach">
+    </td>
+    <td width="50%" align="center">
+      <b>10. Cyberpunk Edgerunners — Moon Skyline (5K)</b>
+      <br><br>
+      <img src="backgrounds/10-edgerunners-moon-4k.jpg" width="100%" alt="Edgerunners Moon">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <b>11. Demon Slayer — Wisteria Mountain (4K)</b>
+      <br><br>
+      <img src="backgrounds/11-demon-slayer-wisteria-4k.jpg" width="100%" alt="Demon Slayer Wisteria">
+    </td>
+    <td width="50%" align="center">
+      <b>12. Anime Scenery — Twilight Horizon (4K)</b>
+      <br><br>
+      <img src="backgrounds/12-anime-sunset-horizon-4k.jpg" width="100%" alt="Twilight Horizon">
+    </td>
+  </tr>
+</table>
 
 ---
 
