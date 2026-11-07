@@ -5,6 +5,12 @@
 .trash/
 __pycache__/
 *.pyc
+
+# Scripts and tools (maintained in omarchy-shinsekai-tools repo)
+*.py
+*.sh
+shinsekai-wallpaper
+
 # Ignore custom user-added wallpapers beyond default 12
 backgrounds/1[3-9]-*
 backgrounds/[2-9][0-9]-*

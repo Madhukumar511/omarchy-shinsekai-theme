@@ -107,6 +107,10 @@ Users can freely add as many custom 4K wallpapers as they want (`[01-N]`) using 
 
 ## Wallpaper Manager CLI (`shin` / `shin-bg`)
 
+> [!NOTE]
+> The wallpaper manager CLI and companion dynamic tools are maintained in their own dedicated repository: **[omarchy-shinsekai-tools](https://github.com/Madhukumar511/omarchy-shinsekai-tools)** per Omarchy theme packaging guidelines.
+> Install the tools alongside this theme anytime using `git clone https://github.com/Madhukumar511/omarchy-shinsekai-tools.git ~/.local/share/omarchy-shinsekai-tools`.
+
 Shinsekai includes a fast terminal CLI tool `shin` (or `shin-bg`) to download, inspect quality, toggle effects, and manage wallpapers from any terminal location (`no cd required`).
 
 ### CLI Commands Reference
@@ -223,37 +227,10 @@ To prevent dark or muted backgrounds from making terminal text and syntax highli
 
 ### Method 1: Automated Installer (Fastest)
 
-Run the one-line installer in your terminal:
+Install the theme via Omarchy:
 
 ```bash
 omarchy theme install https://github.com/Madhukumar511/omarchy-shinsekai-theme.git
-```
-
-Then enable the background color sync daemon and CLI tool:
-
-```bash
-mkdir -p ~/.config/systemd/user ~/.local/bin
-ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shin
-ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shin-bg
-ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shinsekai
-
-cat << 'EOF' > ~/.config/systemd/user/shinsekai-dynamic.service
-[Unit]
-Description=Shinsekai Theme Dynamic Wallpaper Color Sync
-After=graphical-session.target
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/python3 %h/.config/omarchy/themes/shinsekai/shinsekai-watcher.py
-Restart=always
-RestartSec=1
-
-[Install]
-WantedBy=default.target
-EOF
-
-systemctl --user daemon-reload
-systemctl --user enable --now shinsekai-dynamic.service
 ```
 
 ---
@@ -269,13 +246,23 @@ git clone https://github.com/Madhukumar511/omarchy-shinsekai-theme.git ~/.config
 # 2. Activate theme in Omarchy
 omarchy theme set shinsekai
 
-# 3. Setup Wallpaper Manager CLI (shin)
-mkdir -p ~/.local/bin
-ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shin
-ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shin-bg
-ln -nsf ~/.config/omarchy/themes/shinsekai/shinsekai-wallpaper ~/.local/bin/shinsekai
+# 3. Reload Hyprland
+hyprctl reload
+```
 
-# 4. Enable real-time dynamic background color service
+---
+
+### Companion Tools & Wallpaper CLI (Optional)
+
+Tools that go with the theme (CLI wallpaper manager `shin-bg`, background `inotify` watcher daemon, PipeWire music-reactive pulse visualizer) are maintained in the companion repository **[omarchy-shinsekai-tools](https://github.com/Madhukumar511/omarchy-shinsekai-tools)**:
+
+```bash
+git clone https://github.com/Madhukumar511/omarchy-shinsekai-tools.git ~/.local/share/omarchy-shinsekai-tools
+mkdir -p ~/.local/bin
+ln -nsf ~/.local/share/omarchy-shinsekai-tools/shinsekai-wallpaper ~/.local/bin/shin-bg
+ln -nsf ~/.local/share/omarchy-shinsekai-tools/shinsekai-wallpaper ~/.local/bin/shin
+
+# (Optional) Enable background inotify dynamic color daemon:
 mkdir -p ~/.config/systemd/user
 cat << 'EOF' > ~/.config/systemd/user/shinsekai-dynamic.service
 [Unit]
@@ -284,7 +271,7 @@ After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 %h/.config/omarchy/themes/shinsekai/shinsekai-watcher.py
+ExecStart=/usr/bin/python3 %h/.local/share/omarchy-shinsekai-tools/shinsekai-watcher.py
 Restart=always
 RestartSec=1
 
@@ -294,9 +281,6 @@ EOF
 
 systemctl --user daemon-reload
 systemctl --user enable --now shinsekai-dynamic.service
-
-# 5. Reload Hyprland
-hyprctl reload
 ```
 
 ---
@@ -341,11 +325,11 @@ Or press **`SUPER + CTRL + SPACE`** on your keyboard to open the visual thumbnai
 
 ## Included App Styles
 
-Shinsekai ships with complete styling templates for all major tools:
+Shinsekai ships with complete styling templates for Omarchy components:
 
-- **Terminal & Shell**: `starship.toml`, `fastfetch.jsonc`, `alacritty.toml`, `kitty.conf`, `btop.theme`
-- **Desktop Environment**: `hyprland.lua`, `gtk.css`, `walker.css`, `mako.ini`, `swayosd.css`, `hyprlock.conf`, `shell.lock.toml`, `icons.theme` (Yaru-blue-dark)
-- **Code Editors & Apps**: `vscode.json`, `neovim.lua`, `obsidian.css`, `vencord.theme.css` (Discord), `zed.json`
+- **Terminal & Shell**: `starship.toml`, `fastfetch.jsonc`, `btop.theme`
+- **Desktop Environment**: `gtk.css`, `walker.css`, `mako.ini`, `swayosd.css`, `hyprlock.conf`, `shell.lock.toml`, `shell.toml`, `icons.theme` (Yaru-blue-dark), `keyboard.rgb`
+- **Browsers & Apps**: `chromium.theme` (Brave/Chromium), `obsidian.css`, `vencord.theme.css` (Discord), `zed.json`
 
 ---
 
@@ -353,27 +337,28 @@ Shinsekai ships with complete styling templates for all major tools:
 
 ```
 ~/.config/omarchy/themes/shinsekai/
-├── backgrounds/                # 12+ Default 4K/8K Anime Wallpapers (Expandable to [01-N])
-├── .trash/                     # Wallpaper Recovery Trash for Undo
-├── shinsekai-wallpaper        # Custom Wallpaper Downloader & CLI Manager (shin-bg)
-├── dynamic-theme.py           # Hue-Clustering Dynamic Color Extractor & System Sync
-├── shinsekai-watcher.py       # Zero-CPU Linux Kernel Inotify Background Daemon
-├── shinsekai-pulse.py         # PipeWire Music-Reactive Dynamic Border Visualizer
-├── shinsekai-daemon.sh        # Standalone Bash Watcher
-├── colors.toml                # Active Dynamic Palette
-├── hyprland.lua               # Hyprland Window Borders, Blur & Animations
+├── backgrounds/                # 12 Curated 4K & 8K Anime Wallpapers
+├── colors.toml                # Active Theme Palette
 ├── hyprlock.conf              # Dynamic Hyprlock Lockscreen Styling
-├── shell.lock.toml            # Omarchy Quickshell Dynamic Lockscreen Styling
+├── shell.lock.toml            # Omarchy Quickshell Lockscreen Styling
+├── shell.toml                 # Omarchy Shell Panel Styling
 ├── chromium.theme             # Brave / Chromium RGB Accent Theme
 ├── fastfetch.jsonc            # Anime System Info Configuration
 ├── starship.toml              # Shell Prompt Styling
-├── alacritty.toml             # Alacritty Terminal Theme
-├── kitty.conf                 # Kitty Terminal Theme
 ├── btop.theme                 # System Monitor Theme
+├── gtk.css                    # GTK Application Styling
 ├── icons.theme                # System Icon Set (Yaru-blue-dark)
+├── keyboard.rgb               # Keyboard Backlight Profile
+├── mako.ini                   # Notification Daemon Theme
+├── obsidian.css               # Obsidian Vault Theme
+├── swayosd.css                # SwayOSD On-Screen Display Styling
+├── vencord.theme.css          # Discord / Vencord Theme
+├── walker.css                 # Walker Application Launcher Styling
+├── zed.json                   # Zed Editor Theme
 ├── preview.png                # Theme Selector Preview Banner
 ├── preview-unlock.png         # Hyprlock Lockscreen Preview
 ├── unlock.png                 # Lockscreen Asset
+├── shinsekai.webp             # Catalog Thumbnail
 └── README.md                  # Theme Documentation
 ```
 
