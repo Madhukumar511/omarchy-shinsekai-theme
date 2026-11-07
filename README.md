@@ -13,15 +13,20 @@
   <img src="https://img.shields.io/badge/Platform-Omarchy%20%7C%20Hyprland-blue?style=for-the-badge&logo=archlinux" alt="Platform">
   <img src="https://img.shields.io/badge/Wallpapers-12%20Default%204K%2F8K%20(Expandable)-purple?style=for-the-badge" alt="Wallpapers">
   <img src="https://img.shields.io/badge/Theming-Real--Time%20Dynamic%20Sync-green?style=for-the-badge" alt="Dynamic Theming">
-  <img src="https://img.shields.io/badge/CLI%20Tool-shin--bg%20Manager-magenta?style=for-the-badge" alt="CLI Tool">
+  <a href="https://github.com/Madhukumar511/omarchy-shinsekai-tools"><img src="https://img.shields.io/badge/Companion%20Tools-shinsekai--tools-magenta?style=for-the-badge&logo=github" alt="Companion Tools"></a>
   <img src="https://img.shields.io/badge/License-MIT-orange?style=for-the-badge" alt="License">
 </p>
+
+> [!TIP]
+> 🚀 **Looking for the Wallpaper Manager CLI & Dynamic Color Daemon?**<br>
+> All scripts, inotify color watcher, PipeWire audio border visualizer, and the interactive `shin-bg` wallpaper manager CLI are maintained in the companion repository: **[Madhukumar511/omarchy-shinsekai-tools](https://github.com/Madhukumar511/omarchy-shinsekai-tools)**.
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Companion Tools Repository (CLI & Daemons) 🚀](https://github.com/Madhukumar511/omarchy-shinsekai-tools)
 - [Key Features](#key-features)
 - [Wallpaper Gallery (12 Default Masterpieces)](#wallpaper-gallery-12-default-masterpieces)
 - [Wallpaper Manager CLI (`shin-bg`)](#wallpaper-manager-cli-shin-bg)
