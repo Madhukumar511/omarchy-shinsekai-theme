@@ -81,7 +81,7 @@ Users can freely add as many custom 4K wallpapers as they want (`[01-N]`) using 
 
 | 01. Sword Art Online — Asuna Sunlit Meadow (4K) | 02. Your Name — Mitsuha Lake Itomori Sunset (4K) |
 | :---: | :---: |
-| <img src="backgrounds/01-asuna-meadow-nature.png" width="380" alt="Asuna Meadow"> | <img src="backgrounds/02-mitsuha-lake-nature.png" width="380" alt="Mitsuha Lake"> |
+| <img src="backgrounds/01-asuna-meadow-nature.webp" width="380" alt="Asuna Meadow"> | <img src="backgrounds/02-mitsuha-lake-nature.webp" width="380" alt="Mitsuha Lake"> |
 
 | 03. Genshin Impact — Columbina Celestial Snow (8K) | 04. Frieren — Blue Flower Field (4K) |
 | :---: | :---: |
@@ -89,11 +89,11 @@ Users can freely add as many custom 4K wallpapers as they want (`[01-N]`) using 
 
 | 05. Violet Evergarden — Water Meadow (8K) | 06. Spirited Away — Sea Railway Train (4K) |
 | :---: | :---: |
-| <img src="backgrounds/05-violet-evergarden-8k.jpg" width="380" alt="Violet Evergarden"> | <img src="backgrounds/06-spirited-away-train-4k.jpg" width="380" alt="Spirited Away Train"> |
+| <img src="backgrounds/05-violet-evergarden-8k.webp" width="380" alt="Violet Evergarden"> | <img src="backgrounds/06-spirited-away-train-4k.webp" width="380" alt="Spirited Away Train"> |
 
 | 07. Suzume — Cosmic Starry Twilight (4K) | 08. Weathering With You — Sunshine Clouds (8K) |
 | :---: | :---: |
-| <img src="backgrounds/07-suzume-door-starry-4k.jpg" width="380" alt="Suzume Door"> | <img src="backgrounds/08-weathering-with-you-8k.jpg" width="380" alt="Weathering With You"> |
+| <img src="backgrounds/07-suzume-door-starry-4k.webp" width="380" alt="Suzume Door"> | <img src="backgrounds/08-weathering-with-you-8k.jpg" width="380" alt="Weathering With You"> |
 
 | 09. Wuthering Waves — Chisa's Crimson Reach (4K) | 10. Cyberpunk Edgerunners — Moon Skyline (5K) |
 | :---: | :---: |
